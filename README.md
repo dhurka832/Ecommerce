@@ -64,5 +64,3 @@ python manage.py runserver
 * Stripe Payments
 * Order Management
 * User Authentication
-
-## Screenshots
