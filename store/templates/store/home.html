@@ -106,21 +106,7 @@
   .icon-btn.cart-btn { background: var(--ink); border-color: var(--ink); color: white; }
   .icon-btn.cart-btn:hover { background: var(--accent); border-color: var(--accent); }
 
-  /* STATS BAR */
-  .stats-bar {
-    background: var(--ink); color: white; padding: 20px 0;
-  }
-  .stats-inner {
-    max-width: 1280px; margin: 0 auto; padding: 0 24px;
-    display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px;
-    text-align: center;
-  }
-  .stat-num { font-family: var(--font-display); font-size: 1.75rem; font-weight: 700; color: var(--accent); }
-  .stat-label { font-size: .75rem; color: rgba(255,255,255,.5); margin-top: 2px; text-transform: uppercase; letter-spacing: 1px; }
 
-  @media (max-width: 640px) {
-    .stats-inner { grid-template-columns: repeat(2, 1fr); }
-  }
 </style>
 {% endblock %}
 
@@ -141,15 +127,7 @@
   </div>
 </section>
 
-<!-- STATS -->
-<div class="stats-bar">
-  <div class="stats-inner">
-    <div><div class="stat-num">500+</div><div class="stat-label">Products</div></div>
-    <div><div class="stat-num">10K+</div><div class="stat-label">Happy Customers</div></div>
-    <div><div class="stat-num">9</div><div class="stat-label">Categories</div></div>
-    <div><div class="stat-num">24h</div><div class="stat-label">Fast Delivery</div></div>
-  </div>
-</div>
+
 
 <!-- CATEGORY FILTER -->
 <div class="filter-bar">

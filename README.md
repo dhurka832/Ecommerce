@@ -68,7 +68,7 @@ project/
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/your-username/django-ecommerce-store.git
+git clone https://github.com/dhurka832/django-ecommerce-store.git
 cd django-ecommerce-store
 ```
 
@@ -186,18 +186,3 @@ Use any future expiry date and any 3-digit CVC.
 Access the Django admin at `/admin/` to manage products, categories, orders, and users. Create a superuser first with `python manage.py createsuperuser`.
 
 ---
-
-## Deployment Notes
-
-- Set `DEBUG = False` in `settings.py` for production
-- Add your domain to `ALLOWED_HOSTS`
-- Use a production database (PostgreSQL recommended)
-- Serve static and media files via a CDN or whitenoise
-- Use gunicorn or uvicorn as the WSGI/ASGI server
-- Switch Stripe keys from test (`sk_test_`) to live (`sk_live_`)
-
----
-
-## License
-
-MIT License. Free to use and modify.

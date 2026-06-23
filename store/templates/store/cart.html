@@ -22,18 +22,24 @@
   .cart-item-name { font-weight: 600; font-size: .95rem; margin-bottom: 4px; }
   .cart-item-unit { font-size: .8rem; color: var(--ink-muted); }
   .cart-item-controls { display: flex; align-items: center; gap: 12px; }
-  .qty-form { display: flex; align-items: center; gap: 8px; }
-  .qty-input {
-    width: 56px; text-align: center; padding: 6px 8px;
-    border: 1.5px solid var(--border); border-radius: var(--radius-sm);
-    font-family: var(--font); font-size: .875rem; color: var(--ink); background: var(--surface);
+
+  /* QTY STEPPER */
+  .qty-stepper { display: flex; align-items: center; gap: 0; border: 1.5px solid var(--border); border-radius: var(--radius-sm); overflow: hidden; }
+  .qty-btn {
+    width: 34px; height: 34px; border: none; background: var(--surface-alt);
+    cursor: pointer; font-size: 1rem; color: var(--ink); display: flex; align-items: center; justify-content: center;
+    transition: background .15s, color .15s; flex-shrink: 0; line-height: 1;
   }
-  .qty-update {
-    background: var(--surface-alt); border: 1.5px solid var(--border);
-    padding: 6px 12px; border-radius: var(--radius-sm); cursor: pointer;
-    font-size: .75rem; font-weight: 600; font-family: var(--font); transition: all .15s;
+  .qty-btn:hover { background: var(--ink); color: white; }
+  .qty-btn:disabled { opacity: .35; cursor: not-allowed; }
+  .qty-btn:disabled:hover { background: var(--surface-alt); color: var(--ink); }
+  .qty-display {
+    min-width: 42px; text-align: center; font-size: .9rem; font-weight: 700;
+    color: var(--ink); padding: 0 8px; border-left: 1.5px solid var(--border); border-right: 1.5px solid var(--border);
+    height: 34px; display: flex; align-items: center; justify-content: center;
   }
-  .qty-update:hover { background: var(--ink); color: white; border-color: var(--ink); }
+  .qty-form { display: none; }
+
   .remove-btn {
     display: flex; align-items: center; gap: 6px;
     color: var(--danger); font-size: .8rem; text-decoration: none;
@@ -41,6 +47,8 @@
   }
   .remove-btn:hover { background: #fee2e2; }
   .cart-item-price { font-size: 1rem; font-weight: 700; text-align: right; flex-shrink: 0; min-width: 80px; }
+  .cart-item-price .item-total { display: block; }
+  .cart-item-price .item-unit { display: block; font-size: .75rem; font-weight: 400; color: var(--ink-muted); margin-top: 2px; }
 
   /* SUMMARY */
   .order-summary {
@@ -98,17 +106,30 @@
               <div class="cart-item-name">{{ item.product.name }}</div>
               <div class="cart-item-unit">₹{{ item.product.price|floatformat:0 }} each</div>
               <div style="margin-top:10px; display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
-                <form method="POST" action="{% url 'update_cart' item.pk %}" class="qty-form">
+                <!-- Hidden form for actual submission -->
+                <form method="POST" action="{% url 'update_cart' item.pk %}" class="qty-form" id="form-{{ item.pk }}">
                   {% csrf_token %}
-                  <input type="number" name="quantity" value="{{ item.quantity }}" min="0" class="qty-input">
-                  <button type="submit" class="qty-update">Update</button>
+                  <input type="number" name="quantity" value="{{ item.quantity }}" min="0" id="qty-input-{{ item.pk }}">
                 </form>
+                <!-- +/- Stepper -->
+                <div class="qty-stepper">
+                  <button class="qty-btn" type="button"
+                    onclick="changeQty({{ item.pk }}, -1)"
+                    id="btn-minus-{{ item.pk }}"
+                    {% if item.quantity <= 1 %}disabled{% endif %}>−</button>
+                  <span class="qty-display" id="qty-display-{{ item.pk }}">{{ item.quantity }}</span>
+                  <button class="qty-btn" type="button"
+                    onclick="changeQty({{ item.pk }}, 1)">+</button>
+                </div>
                 <a href="{% url 'remove_from_cart' item.pk %}" class="remove-btn">
                   <i class="fa fa-trash"></i> Remove
                 </a>
               </div>
             </div>
-            <div class="cart-item-price">₹{{ item.product.price|floatformat:0|stringformat:'s' }}</div>
+            <div class="cart-item-price" id="price-{{ item.pk }}">
+              <span class="item-total">₹<span id="total-{{ item.pk }}">{{ item.product.price|floatformat:0 }}</span></span>
+              <span class="item-unit" data-unit="{{ item.product.price }}">₹{{ item.product.price|floatformat:0 }} each</span>
+            </div>
           </div>
           {% endfor %}
         </div>
@@ -152,4 +173,32 @@
 
   </div>
 </div>
+
+<script>
+  function changeQty(itemId, delta) {
+    const display  = document.getElementById('qty-display-' + itemId);
+    const input    = document.getElementById('qty-input-' + itemId);
+    const minusBtn = document.getElementById('btn-minus-' + itemId);
+    const totalEl  = document.getElementById('total-' + itemId);
+    const unitPrice = parseFloat(
+      document.querySelector('#price-' + itemId + ' .item-unit').dataset.unit
+    );
+
+    let next = parseInt(display.textContent) + delta;
+    if (next < 1) return;
+
+    display.textContent = next;
+    input.value = next;
+    minusBtn.disabled = next <= 1;
+
+    // Update line total instantly
+    totalEl.textContent = Math.round(unitPrice * next).toLocaleString('en-IN');
+
+    // Debounce: submit 600ms after last click
+    clearTimeout(window['timer_' + itemId]);
+    window['timer_' + itemId] = setTimeout(() => {
+      document.getElementById('form-' + itemId).submit();
+    }, 600);
+  }
+</script>
 {% endblock %}

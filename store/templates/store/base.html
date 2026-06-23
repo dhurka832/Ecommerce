@@ -222,7 +222,12 @@
         <a href="{% url 'wishlist' %}"><i class="fa fa-heart"></i><span>Wishlist</span></a>
         <a href="{% url 'cart' %}"><i class="fa fa-shopping-bag"></i><span>Cart</span></a>
         <a href="{% url 'order_history' %}"><i class="fa fa-box"></i><span>Orders</span></a>
-        <a href="{% url 'logout' %}" class="nav-cta"><i class="fa fa-sign-out-alt"></i><span>Logout</span></a>
+        <form method="POST" action="{% url 'logout' %}" style="margin:0;">
+          {% csrf_token %}
+          <button type="submit" class="nav-cta btn" style="border:none;cursor:pointer;">
+            <i class="fa fa-sign-out-alt"></i><span>Logout</span>
+          </button>
+        </form>
       {% else %}
         <a href="{% url 'login' %}"><i class="fa fa-sign-in-alt"></i><span>Login</span></a>
         <a href="{% url 'register' %}" class="nav-cta"><span>Sign Up</span></a>
