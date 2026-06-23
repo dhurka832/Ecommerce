@@ -1,164 +1,121 @@
-from django.shortcuts import render, redirect
-from .models import Product, Cart, CartItem, Order, OrderItem, Category, Wishlist
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.models import User
-from django.db.models import Q
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import login
 from django.contrib import messages
-from django.contrib.auth import authenticate, login, logout
+from .models import Product, Category, Cart, CartItem, Order, OrderItem, Wishlist
 import stripe
 from django.conf import settings
 
-stripe.api_key = settings.STRIPE_SECRET_KEY
-
 def home(request):
-    query = request.GET.get('q')
-    category = request.GET.get('category')
+    query = request.GET.get('q', '')
+    category_id = request.GET.get('category', '')
     products = Product.objects.all()
     if query:
-        products = products.filter(
-            Q(name__icontains=query) | Q(description__icontains=query)
-        )
-    if category:
-        products = products.filter(category__name=category)
+        products = products.filter(name__icontains=query)
+    if category_id:
+        products = products.filter(category_id=category_id)
     categories = Category.objects.all()
-    return render(request, 'home.html', {
-        'products': products,
-        'categories': categories
+    return render(request, 'store/home.html', {
+        'products': products, 'categories': categories,
+        'query': query, 'selected_category': category_id
     })
 
-def add_to_cart(request, product_id):
-    if not request.user.is_authenticated:
-        return redirect('login')
-    product = get_object_or_404(Product, id=product_id)
-    cart, created = Cart.objects.get_or_create(user=request.user)
-    item, created = CartItem.objects.get_or_create(cart=cart, product=product)
+def product_detail(request, pk):
+    product = get_object_or_404(Product, pk=pk)
+    return render(request, 'store/product_detail.html', {'product': product})
+
+@login_required
+def cart(request):
+    cart_obj, _ = Cart.objects.get_or_create(user=request.user)
+    items = CartItem.objects.filter(cart=cart_obj)
+    total = sum(i.product.price * i.quantity for i in items)
+    return render(request, 'store/cart.html', {'items': items, 'total': total})
+
+@login_required
+def add_to_cart(request, pk):
+    product = get_object_or_404(Product, pk=pk)
+    cart_obj, _ = Cart.objects.get_or_create(user=request.user)
+    item, created = CartItem.objects.get_or_create(cart=cart_obj, product=product)
     if not created:
         item.quantity += 1
-    item.save()
+        item.save()
+    messages.success(request, f'"{product.name}" added to cart!')
     return redirect('cart')
 
-def cart_view(request):
-    if not request.user.is_authenticated:
-        return redirect('login')
-    cart = Cart.objects.filter(user=request.user).first()
-    items = CartItem.objects.filter(cart=cart) if cart else []
-    total = sum(item.product.price * item.quantity for item in items)
-    return render(request, 'cart.html', {'items': items, 'total': total})
-
-def increase_quantity(request, item_id):
-    item = CartItem.objects.get(id=item_id)
-    item.quantity += 1
-    item.save()
+@login_required
+def remove_from_cart(request, pk):
+    item = get_object_or_404(CartItem, pk=pk, cart__user=request.user)
+    item.delete()
     return redirect('cart')
 
-
-def decrease_quantity(request, item_id):
-    item = CartItem.objects.get(id=item_id)
-    if item.quantity > 1:
-        item.quantity -= 1
+@login_required
+def update_cart(request, pk):
+    item = get_object_or_404(CartItem, pk=pk, cart__user=request.user)
+    qty = int(request.POST.get('quantity', 1))
+    if qty > 0:
+        item.quantity = qty
         item.save()
     else:
         item.delete()
     return redirect('cart')
 
-def remove_item(request, item_id):
-    item = CartItem.objects.get(id=item_id)
-    item.delete()
-    return redirect('cart')
-
-def checkout(request):
-    if not request.user.is_authenticated:
-        return redirect('login')
-    cart = Cart.objects.filter(user=request.user).first()
-    items = CartItem.objects.filter(cart=cart)
-    if not items:
-        return redirect('cart')
-    total = sum(item.product.price * item.quantity for item in items)
-    order = Order.objects.create(
-        user=request.user,
-        total_price=total,
-        status="Paid" 
-    )
-    for item in items:
-        OrderItem.objects.create(
-            order=order,
-            product=item.product,
-            quantity=item.quantity
-        )
-    items.delete()
-    return render(request, 'success.html', {'order': order})
-
-def stripe_payment(request):
-    cart = Cart.objects.get(user=request.user)
-    items = CartItem.objects.filter(cart=cart)
-    line_items = []
-    for item in items:
-        line_items.append({
-            'price_data': {
-                'currency': 'inr',
-                'product_data': {
-                    'name': item.product.name,
-                },
-                'unit_amount': int(item.product.price * 100),
-            },
-            'quantity': item.quantity,
-        })
-    session = stripe.checkout.Session.create(
-        payment_method_types=['card'],
-        line_items=line_items,
-        mode='payment',
-        success_url='http://127.0.0.1:8000/checkout/',
-        cancel_url='http://127.0.0.1:8000/cart/',
-    )
-    return redirect(session.url, code=303)
-
-def order_history(request):
-    if not request.user.is_authenticated:
-        return redirect('login')
-    orders = Order.objects.filter(user=request.user).order_by('-created_at')
-    return render(request, 'orders.html', {'orders': orders})
-
-def add_to_wishlist(request, product_id):
-    if not request.user.is_authenticated:
-        return redirect('login')
-    product = Product.objects.get(id=product_id)
-    Wishlist.objects.get_or_create(user=request.user, product=product)
-    return redirect('wishlist')
-
-
-def wishlist_view(request):
+@login_required
+def wishlist(request):
     items = Wishlist.objects.filter(user=request.user)
-    return render(request, 'wishlist.html', {'items': items})
+    return render(request, 'store/wishlist.html', {'items': items})
 
-
-def remove_wishlist(request, id):
-    Wishlist.objects.filter(id=id).delete()
+@login_required
+def add_to_wishlist(request, pk):
+    product = get_object_or_404(Product, pk=pk)
+    Wishlist.objects.get_or_create(user=request.user, product=product)
+    messages.success(request, f'"{product.name}" added to wishlist!')
     return redirect('wishlist')
+
+@login_required
+def remove_from_wishlist(request, pk):
+    item = get_object_or_404(Wishlist, pk=pk, user=request.user)
+    item.delete()
+    return redirect('wishlist')
+
+@login_required
+def checkout(request):
+    cart_obj, _ = Cart.objects.get_or_create(user=request.user)
+    items = CartItem.objects.filter(cart=cart_obj)
+    total = sum(i.product.price * i.quantity for i in items)
+    stripe.api_key = settings.STRIPE_SECRET_KEY
+    if request.method == 'POST':
+        token = request.POST.get('stripeToken')
+        try:
+            stripe.Charge.create(amount=int(total * 100), currency='inr', source=token)
+            order = Order.objects.create(user=request.user, total_price=total, status='Paid')
+            for item in items:
+                OrderItem.objects.create(order=order, product=item.product, quantity=item.quantity)
+            items.delete()
+            return redirect('order_success')
+        except stripe.error.StripeError as e:
+            messages.error(request, str(e))
+    return render(request, 'store/checkout.html', {
+        'items': items, 'total': total,
+        'stripe_key': settings.STRIPE_PUBLISHABLE_KEY
+    })
+
+@login_required
+def order_success(request):
+    return render(request, 'store/order_success.html')
+
+@login_required
+def order_history(request):
+    orders = Order.objects.filter(user=request.user).order_by('-created_at')
+    return render(request, 'store/order_history.html', {'orders': orders})
 
 def register(request):
     if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
-        if User.objects.filter(username=username).exists():
-            messages.error(request, "Username already exists")
-            return redirect('register')
-        User.objects.create_user(username=username, password=password)
-        return redirect('login')
-    return render(request, 'register.html')
-
-def user_login(request):
-    if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
-        user = authenticate(request, username=username, password=password)
-        if user:
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
             login(request, user)
             return redirect('home')
-        else:
-            return render(request, 'login.html', {'error': 'Invalid credentials'})
-    return render(request, 'login.html')
-
-
-def user_logout(request):
-    logout(request)
-    return redirect('login')
+    else:
+        form = UserCreationForm()
+    return render(request, 'store/register.html', {'form': form})

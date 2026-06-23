@@ -1,82 +1,203 @@
-# Django E-Commerce Store
+# LUXE Store — Django E-Commerce
 
-A simple E-Commerce web application built with Django featuring product browsing, cart management, wishlist functionality, user authentication, order tracking, and Stripe payment integration.
+A full-featured Django e-commerce web application with a modern UI. Supports product browsing, cart management, wishlists, user authentication, order tracking, and Stripe payment integration.
+
+---
 
 ## Features
 
-* User Registration & Login
-* Product Search & Category Filtering
-* Shopping Cart Management
-* Wishlist Functionality
-* Stripe Payment Gateway
-* Order History
-* Quantity Management
-* Secure Authentication
+- User registration and login
+- Product search and category filtering
+- Shopping cart with quantity management
+- Wishlist functionality
+- Stripe payment gateway (test mode ready)
+- Order history tracking
+- Responsive design — works on mobile and desktop
+- Sticky navbar with live search
+- Toast notifications for cart/wishlist actions
+
+---
 
 ## Tech Stack
 
-* Django
-* SQLite
-* Stripe API
-* HTML, CSS, Bootstrap
+| Layer | Technology |
+|---|---|
+| Backend | Django 5.x |
+| Database | SQLite |
+| Payments | Stripe API |
+| Frontend | HTML, CSS (custom), Font Awesome, Google Fonts |
+| Forms | django-crispy-forms + crispy-bootstrap5 |
+| Auth | Django built-in authentication |
+
+---
+
+## Project Structure
+
+```
+project/
+├── manage.py
+├── db.sqlite3
+├── .env
+├── ecommerce/
+│   ├── __init__.py
+│   ├── settings.py
+│   └── urls.py
+└── store/
+    ├── models.py
+    ├── views.py
+    ├── urls.py
+    ├── admin.py
+    ├── apps.py
+    └── templates/store/
+        ├── base.html          # Shared layout, navbar, footer
+        ├── home.html          # Product grid, hero, category filter
+        ├── product_detail.html
+        ├── cart.html
+        ├── wishlist.html
+        ├── checkout.html      # Stripe card element
+        ├── order_success.html
+        ├── order_history.html
+        ├── login.html
+        └── register.html
+```
+
+---
 
 ## Installation
+
+### 1. Clone the repository
 
 ```bash
 git clone https://github.com/your-username/django-ecommerce-store.git
 cd django-ecommerce-store
-
-pip install -r requirements.txt
 ```
 
-Create a `.env` file or update `settings.py`:
+### 2. Create and activate a virtual environment
+
+```bash
+python -m venv env
+source env/bin/activate        # macOS / Linux
+env\Scripts\activate           # Windows
+```
+
+### 3. Install dependencies
+
+```bash
+pip install django python-dotenv stripe django-crispy-forms crispy-bootstrap5 Pillow
+```
+
+### 4. Configure environment variables
+
+Create a `.env` file in the project root:
 
 ```env
-STRIPE_SECRET_KEY=your_stripe_secret_key
+STRIPE_SECRET_KEY=sk_test_your_key_here
+STRIPE_PUBLISHABLE_KEY=pk_test_your_key_here
 ```
 
-Run migrations:
+Get your keys from [https://dashboard.stripe.com/test/apikeys](https://dashboard.stripe.com/test/apikeys).
+
+### 5. Run migrations
 
 ```bash
 python manage.py makemigrations
 python manage.py migrate
 ```
 
-Start the server:
+### 6. Create a superuser (optional, for admin access)
+
+```bash
+python manage.py createsuperuser
+```
+
+### 7. Start the development server
 
 ```bash
 python manage.py runserver
 ```
 
+Visit [http://localhost:8000](http://localhost:8000)
+
+---
+
+## Database Models
+
+| Model | Fields |
+|---|---|
+| `Category` | name |
+| `Product` | name, price, description, image, category |
+| `Cart` | user, created_at |
+| `CartItem` | cart, product, quantity |
+| `Order` | user, total_price, created_at, status |
+| `OrderItem` | order, product, quantity |
+| `Wishlist` | user, product |
+
+---
+
 ## Usage
 
-1. Register or login.
-2. Browse products by category.
-3. Add products to cart or wishlist.
-4. Proceed to checkout using Stripe.
-5. View order history after purchase.
+1. Register or log in at `/register/` or `/login/`
+2. Browse products on the home page — filter by category or search
+3. Click a product to view its detail page
+4. Add products to your cart or wishlist
+5. Go to `/cart/` and proceed to checkout
+6. Pay using Stripe (test card: `4242 4242 4242 4242`, any future date, any CVC)
+7. View your order history at `/orders/`
 
-## Features Overview
+---
 
-* Product Search
-* Shopping Cart
-* Wishlist
-* Stripe Payments
-* Order Management
-* User Authentication
+## URL Reference
 
-## Screenshots
-<img width="1920" height="1020" alt="ecommerce_1" src="https://github.com/user-attachments/assets/c824d660-c837-48a2-8c40-bf758f476e09" />
+| URL | View | Description |
+|---|---|---|
+| `/` | `home` | Product listing with search and filter |
+| `/product/<id>/` | `product_detail` | Single product page |
+| `/cart/` | `cart` | Shopping cart |
+| `/add-to-cart/<id>/` | `add_to_cart` | Add item to cart |
+| `/remove-from-cart/<id>/` | `remove_from_cart` | Remove item from cart |
+| `/update-cart/<id>/` | `update_cart` | Update item quantity |
+| `/wishlist/` | `wishlist` | Saved items |
+| `/add-to-wishlist/<id>/` | `add_to_wishlist` | Save item to wishlist |
+| `/remove-from-wishlist/<id>/` | `remove_from_wishlist` | Remove from wishlist |
+| `/checkout/` | `checkout` | Stripe payment form |
+| `/order-success/` | `order_success` | Confirmation page |
+| `/orders/` | `order_history` | Past orders |
+| `/register/` | `register` | New user signup |
+| `/login/` | `login` | Login |
+| `/logout/` | `logout` | Logout |
+| `/admin/` | Django admin | Admin panel |
 
+---
 
-<img width="1920" height="1020" alt="ecommerce_2" src="https://github.com/user-attachments/assets/d824e672-7da8-4049-aca4-e054bb517ebf" />
+## Stripe Test Cards
 
+| Card Number | Scenario |
+|---|---|
+| `4242 4242 4242 4242` | Payment succeeds |
+| `4000 0000 0000 0002` | Payment declined |
+| `4000 0025 0000 3155` | Requires authentication |
 
-<img width="1920" height="1020" alt="ecommerce_3" src="https://github.com/user-attachments/assets/b8f9891d-bed2-432b-b771-1bec648a0d06" />
+Use any future expiry date and any 3-digit CVC.
 
+---
 
-<img width="1920" height="1020" alt="ecommerce_4" src="https://github.com/user-attachments/assets/3d02138f-a8b3-4ac0-beee-966b3c2803c1" />
+## Admin Panel
 
+Access the Django admin at `/admin/` to manage products, categories, orders, and users. Create a superuser first with `python manage.py createsuperuser`.
 
-<img width="1920" height="1020" alt="ecommerce_5" src="https://github.com/user-attachments/assets/a8b50496-25e5-4637-8743-15749266a38b" />
+---
 
+## Deployment Notes
+
+- Set `DEBUG = False` in `settings.py` for production
+- Add your domain to `ALLOWED_HOSTS`
+- Use a production database (PostgreSQL recommended)
+- Serve static and media files via a CDN or whitenoise
+- Use gunicorn or uvicorn as the WSGI/ASGI server
+- Switch Stripe keys from test (`sk_test_`) to live (`sk_live_`)
+
+---
+
+## License
+
+MIT License. Free to use and modify.

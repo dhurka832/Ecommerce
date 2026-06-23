@@ -1,0 +1,225 @@
+{% extends 'store/base.html' %}
+{% block title %}LUXE Store — Shop{% endblock %}
+
+{% block extra_head %}
+<style>
+  /* HERO */
+  .hero {
+    background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 50%, #2d2318 100%);
+    color: white; padding: 80px 0; overflow: hidden; position: relative;
+  }
+  .hero::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 70% 50%, rgba(200,169,110,.15) 0%, transparent 60%);
+  }
+  .hero-inner {
+    max-width: 1280px; margin: 0 auto; padding: 0 24px;
+    position: relative; z-index: 1;
+  }
+  .hero-eyebrow {
+    font-size: .75rem; font-weight: 700; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 16px;
+  }
+  .hero h1 {
+    font-family: var(--font-display); font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 700; line-height: 1.1; margin-bottom: 20px;
+    max-width: 560px;
+  }
+  .hero h1 em { font-style: normal; color: var(--accent); }
+  .hero p { color: rgba(255,255,255,.6); max-width: 420px; margin-bottom: 32px; font-size: 1.05rem; }
+  .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+  .hero-actions .btn-hero {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 14px 28px; border-radius: var(--radius-sm);
+    font-size: .9rem; font-weight: 600; text-decoration: none; cursor: pointer; border: none;
+    transition: all .15s;
+  }
+  .btn-hero-primary { background: var(--accent); color: white; }
+  .btn-hero-primary:hover { background: var(--accent-dark); transform: translateY(-1px); }
+  .btn-hero-ghost { background: rgba(255,255,255,.08); color: white; border: 1.5px solid rgba(255,255,255,.2); }
+  .btn-hero-ghost:hover { background: rgba(255,255,255,.14); }
+
+  /* CATEGORY PILLS */
+  .filter-bar {
+    background: var(--surface); border-bottom: 1px solid var(--border);
+    position: sticky; top: var(--nav-h); z-index: 50;
+  }
+  .filter-inner {
+    max-width: 1280px; margin: 0 auto; padding: 0 24px;
+    display: flex; gap: 8px; overflow-x: auto; padding-top: 12px; padding-bottom: 12px;
+    scrollbar-width: none;
+  }
+  .filter-inner::-webkit-scrollbar { display: none; }
+  .cat-pill {
+    flex-shrink: 0; padding: 6px 16px; border-radius: 999px;
+    font-size: .825rem; font-weight: 500; text-decoration: none;
+    border: 1.5px solid var(--border); color: var(--ink-muted);
+    background: var(--surface); transition: all .15s;
+  }
+  .cat-pill:hover, .cat-pill.active {
+    background: var(--ink); color: white; border-color: var(--ink);
+  }
+
+  /* PRODUCT CARD */
+  .product-card { cursor: pointer; }
+  .product-card-img {
+    aspect-ratio: 4/3; overflow: hidden; background: var(--surface-alt);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .product-card-img img {
+    width: 100%; height: 100%; object-fit: cover;
+    transition: transform .4s ease;
+  }
+  .product-card:hover .product-card-img img { transform: scale(1.06); }
+  .product-card-img .no-img {
+    font-size: 3rem; color: var(--border);
+  }
+  .product-card-body { padding: 16px; }
+  .product-cat {
+    font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
+    color: var(--accent); margin-bottom: 4px;
+  }
+  .product-name {
+    font-size: .95rem; font-weight: 600; color: var(--ink);
+    margin-bottom: 6px; line-height: 1.4;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  }
+  .product-desc {
+    font-size: .8rem; color: var(--ink-muted); margin-bottom: 12px;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  }
+  .product-footer {
+    display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  }
+  .product-price {
+    font-size: 1.1rem; font-weight: 700; color: var(--ink);
+  }
+  .product-price small { font-size: .7rem; color: var(--ink-muted); font-weight: 400; margin-left: 2px; }
+  .product-actions { display: flex; gap: 6px; }
+  .icon-btn {
+    width: 34px; height: 34px; border-radius: 8px; border: 1.5px solid var(--border);
+    background: var(--surface); color: var(--ink-muted); cursor: pointer;
+    display: flex; align-items: center; justify-content: center; font-size: .8rem;
+    text-decoration: none; transition: all .15s;
+  }
+  .icon-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .icon-btn.cart-btn { background: var(--ink); border-color: var(--ink); color: white; }
+  .icon-btn.cart-btn:hover { background: var(--accent); border-color: var(--accent); }
+
+  /* STATS BAR */
+  .stats-bar {
+    background: var(--ink); color: white; padding: 20px 0;
+  }
+  .stats-inner {
+    max-width: 1280px; margin: 0 auto; padding: 0 24px;
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px;
+    text-align: center;
+  }
+  .stat-num { font-family: var(--font-display); font-size: 1.75rem; font-weight: 700; color: var(--accent); }
+  .stat-label { font-size: .75rem; color: rgba(255,255,255,.5); margin-top: 2px; text-transform: uppercase; letter-spacing: 1px; }
+
+  @media (max-width: 640px) {
+    .stats-inner { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <p class="hero-eyebrow">New Season Arrivals</p>
+    <h1>Shop <em>What You</em> Love</h1>
+    <p>From fashion to electronics — curated picks, unbeatable prices, and fast delivery.</p>
+    <div class="hero-actions">
+      <a href="#products" class="btn-hero btn-hero-primary"><i class="fa fa-arrow-down"></i> Shop Now</a>
+      {% if not user.is_authenticated %}
+        <a href="{% url 'register' %}" class="btn-hero btn-hero-ghost">Create Account</a>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats-bar">
+  <div class="stats-inner">
+    <div><div class="stat-num">500+</div><div class="stat-label">Products</div></div>
+    <div><div class="stat-num">10K+</div><div class="stat-label">Happy Customers</div></div>
+    <div><div class="stat-num">9</div><div class="stat-label">Categories</div></div>
+    <div><div class="stat-num">24h</div><div class="stat-label">Fast Delivery</div></div>
+  </div>
+</div>
+
+<!-- CATEGORY FILTER -->
+<div class="filter-bar">
+  <div class="filter-inner">
+    <a href="/" class="cat-pill {% if not selected_category %}active{% endif %}">All</a>
+    {% for cat in categories %}
+      <a href="/?category={{ cat.id }}" class="cat-pill {% if selected_category == cat.id|stringformat:'s' %}active{% endif %}">{{ cat.name|title }}</a>
+    {% endfor %}
+  </div>
+</div>
+
+<!-- PRODUCTS -->
+<div class="page" id="products">
+  <div class="container">
+
+    <div class="page-header">
+      <h1>
+        {% if query %}Results for "{{ query }}"
+        {% elif selected_category %}{{ selected_category }} Products
+        {% else %}All Products{% endif %}
+      </h1>
+      <p>{{ products.count }} product{{ products.count|pluralize }} found</p>
+    </div>
+
+    {% if products %}
+      <div class="product-grid">
+        {% for product in products %}
+        <div class="card product-card" onclick="location.href='{% url 'product_detail' product.pk %}'">
+          <div class="product-card-img">
+            {% if product.image %}
+              <img src="/media/{{ product.image }}" alt="{{ product.name }}">
+            {% else %}
+              <span class="no-img"><i class="fa fa-image"></i></span>
+            {% endif %}
+          </div>
+          <div class="product-card-body">
+            <div class="product-cat">{{ product.category.name }}</div>
+            <div class="product-name">{{ product.name }}</div>
+            <div class="product-desc">{{ product.description }}</div>
+            <div class="product-footer">
+              <div class="product-price">₹{{ product.price|floatformat:0 }}<small>/item</small></div>
+              <div class="product-actions" onclick="event.stopPropagation()">
+                {% if user.is_authenticated %}
+                  <a href="{% url 'add_to_wishlist' product.pk %}" class="icon-btn" title="Add to wishlist">
+                    <i class="fa fa-heart"></i>
+                  </a>
+                  <a href="{% url 'add_to_cart' product.pk %}" class="icon-btn cart-btn" title="Add to cart">
+                    <i class="fa fa-shopping-cart"></i>
+                  </a>
+                {% else %}
+                  <a href="{% url 'login' %}" class="icon-btn cart-btn" title="Login to add">
+                    <i class="fa fa-shopping-cart"></i>
+                  </a>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="empty-state">
+        <div class="empty-icon"><i class="fa fa-search"></i></div>
+        <h3>No products found</h3>
+        <p>Try a different search term or browse all categories.</p>
+        <a href="/" class="btn btn-primary">Browse All Products</a>
+      </div>
+    {% endif %}
+
+  </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,80 @@
+{% extends 'store/base.html' %}
+{% block title %}Create Account — LUXE Store{% endblock %}
+
+{% block extra_head %}
+<style>
+  .auth-wrap { min-height: 80vh; display: flex; align-items: center; justify-content: center; padding: 48px 24px; }
+  .auth-card { max-width: 460px; width: 100%; }
+  .auth-header { text-align: center; margin-bottom: 36px; }
+  .auth-logo { font-family: var(--font-display); font-size: 2rem; font-weight: 700; color: var(--ink); }
+  .auth-logo span { color: var(--accent); }
+  .auth-header h2 { font-size: 1.5rem; font-weight: 700; margin-top: 20px; }
+  .auth-header p { color: var(--ink-muted); margin-top: 6px; }
+  .auth-box { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 36px; box-shadow: var(--shadow); }
+  .auth-footer { text-align: center; margin-top: 20px; font-size: .875rem; color: var(--ink-muted); }
+  .auth-footer a { color: var(--accent); text-decoration: none; font-weight: 600; }
+  .auth-footer a:hover { text-decoration: underline; }
+  .field-wrap { margin-bottom: 18px; }
+  .field-wrap label { display: block; font-size: .8rem; font-weight: 600; color: var(--ink-muted); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 6px; }
+  .field-wrap input { width: 100%; padding: 11px 14px; border: 1.5px solid var(--border); border-radius: var(--radius-sm); font-family: var(--font); font-size: .9rem; color: var(--ink); background: var(--surface); outline: none; transition: border-color .15s; }
+  .field-wrap input:focus { border-color: var(--accent); }
+  .field-helptext { font-size: .75rem; color: var(--ink-muted); margin-top: 5px; }
+  .field-errors { list-style: none; }
+  .field-errors li { font-size: .78rem; color: var(--danger); margin-top: 4px; }
+  .perks { display: flex; gap: 16px; justify-content: center; margin-top: 28px; flex-wrap: wrap; }
+  .perk { display: flex; align-items: center; gap: 6px; font-size: .8rem; color: var(--ink-muted); }
+  .perk i { color: var(--accent); }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="auth-wrap">
+  <div class="auth-card">
+    <div class="auth-header">
+      <div class="auth-logo">LUXE<span>.</span></div>
+      <h2>Create your account</h2>
+      <p>Join thousands of happy shoppers</p>
+    </div>
+    <div class="auth-box">
+      <form method="POST">
+        {% csrf_token %}
+        {% for field in form %}
+        <div class="field-wrap">
+          <label>{{ field.label }}</label>
+          {{ field }}
+          {% if field.help_text %}<p class="field-helptext">{{ field.help_text }}</p>{% endif %}
+          {% if field.errors %}<ul class="field-errors">{% for e in field.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+        </div>
+        {% endfor %}
+        <button type="submit" class="btn btn-primary btn-full" style="margin-top:8px; padding:14px; font-size:.95rem;">
+          <i class="fa fa-user-plus"></i> Create Account
+        </button>
+      </form>
+    </div>
+    <p class="auth-footer">Already have an account? <a href="{% url 'login' %}">Sign in</a></p>
+    <div class="perks">
+      <div class="perk"><i class="fa fa-shield-alt"></i> Secure</div>
+      <div class="perk"><i class="fa fa-heart"></i> Wishlist</div>
+      <div class="perk"><i class="fa fa-box"></i> Track Orders</div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Style Django's default form fields to match our design
+  document.querySelectorAll('.field-wrap input, .field-wrap select').forEach(el => {
+    el.style.width = '100%';
+    el.style.padding = '11px 14px';
+    el.style.border = '1.5px solid var(--border)';
+    el.style.borderRadius = 'var(--radius-sm)';
+    el.style.fontFamily = 'var(--font)';
+    el.style.fontSize = '.9rem';
+    el.style.color = 'var(--ink)';
+    el.style.background = 'var(--surface)';
+    el.style.outline = 'none';
+    el.style.boxSizing = 'border-box';
+    el.addEventListener('focus', () => el.style.borderColor = 'var(--accent)');
+    el.addEventListener('blur', () => el.style.borderColor = 'var(--border)');
+  });
+</script>
+{% endblock %}
