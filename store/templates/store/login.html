@@ -1,54 +1,51 @@
 {% extends 'store/base.html' %}
 {% block title %}Login — LUXE Store{% endblock %}
 
-{% block extra_head %}
-<style>
-  .auth-wrap { min-height: 80vh; display: flex; align-items: center; justify-content: center; padding: 48px 24px; }
-  .auth-card { max-width: 420px; width: 100%; }
-  .auth-header { text-align: center; margin-bottom: 36px; }
-  .auth-logo { font-family: var(--font-display); font-size: 2rem; font-weight: 700; color: var(--ink); }
-  .auth-logo span { color: var(--accent); }
-  .auth-header h2 { font-size: 1.5rem; font-weight: 700; margin-top: 20px; }
-  .auth-header p { color: var(--ink-muted); margin-top: 6px; }
-  .auth-box { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 36px; box-shadow: var(--shadow); }
-  .auth-footer { text-align: center; margin-top: 20px; font-size: .875rem; color: var(--ink-muted); }
-  .auth-footer a { color: var(--accent); text-decoration: none; font-weight: 600; }
-  .auth-footer a:hover { text-decoration: underline; }
-  .errorlist { list-style: none; background: #fee2e2; border-radius: 8px; padding: 12px 16px; margin-bottom: 16px; }
-  .errorlist li { color: var(--danger); font-size: .85rem; }
-</style>
-{% endblock %}
-
 {% block content %}
-<div class="auth-wrap">
-  <div class="auth-card">
-    <div class="auth-header">
-      <div class="auth-logo">LUXE<span>.</span></div>
-      <h2>Welcome back</h2>
-      <p>Sign in to your account to continue</p>
+<div class="d-flex align-items-center justify-content-center py-5" style="min-height: 80vh;">
+  <div class="container" style="max-width: 420px;">
+    
+    <div class="text-center mb-4">
+      <div class="display-5 fw-bold text-dark mb-3">LUXE<span class="text-warning">.</span></div>
+      <h2 class="fw-bold fs-3">Welcome back</h2>
+      <p class="text-secondary">Sign in to your account to continue</p>
     </div>
-    <div class="auth-box">
-      {% if form.non_field_errors %}
-        <ul class="errorlist">
-          {% for error in form.non_field_errors %}<li>{{ error }}</li>{% endfor %}
-        </ul>
-      {% endif %}
-      <form method="POST">
-        {% csrf_token %}
-        <div class="form-group">
-          <label class="form-label">Username</label>
-          <input type="text" name="username" class="form-control" placeholder="Enter your username" autofocus>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Password</label>
-          <input type="password" name="password" class="form-control" placeholder="Enter your password">
-        </div>
-        <button type="submit" class="btn btn-primary btn-full" style="margin-top:8px; padding:14px; font-size:.95rem;">
-          <i class="fa fa-sign-in-alt"></i> Sign In
-        </button>
-      </form>
+    
+    <div class="card shadow-sm border-0 bg-white">
+      <div class="card-body p-4 p-md-5">
+        
+        {% if form.non_field_errors %}
+          <div class="alert alert-danger p-3 mb-4">
+            <ul class="mb-0 ps-3 small fw-bold">
+              {% for error in form.non_field_errors %}<li>{{ error }}</li>{% endfor %}
+            </ul>
+          </div>
+        {% endif %}
+        
+        <form method="POST">
+          {% csrf_token %}
+          <div class="mb-3">
+            <label class="form-label fw-bold small text-secondary text-uppercase tracking-wide">Username</label>
+            <input type="text" name="username" class="form-control p-3 bg-light" placeholder="Enter your username" autofocus>
+          </div>
+          
+          <div class="mb-4">
+            <label class="form-label fw-bold small text-secondary text-uppercase tracking-wide">Password</label>
+            <input type="password" name="password" class="form-control p-3 bg-light" placeholder="Enter your password">
+          </div>
+          
+          <button type="submit" class="btn btn-dark w-100 py-3 fw-bold fs-6">
+            <i class="fa fa-sign-in-alt me-2"></i> Sign In
+          </button>
+        </form>
+        
+      </div>
     </div>
-    <p class="auth-footer">Don't have an account? <a href="{% url 'register' %}">Create one free</a></p>
+    
+    <div class="text-center mt-4">
+      <p class="text-secondary small">Don't have an account? <a href="{% url 'register' %}" class="text-warning fw-bold text-decoration-none">Create one free</a></p>
+    </div>
+    
   </div>
 </div>
 {% endblock %}

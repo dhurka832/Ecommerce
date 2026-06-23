@@ -1,278 +1,104 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{% block title %}LUXE Store{% endblock %}</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --ink: #0f0f0f;
-      --ink-muted: #6b7280;
-      --ink-faint: #9ca3af;
-      --surface: #ffffff;
-      --surface-alt: #f8f7f5;
-      --surface-hover: #f1f0ee;
-      --border: #e5e4e2;
-      --accent: #c8a96e;
-      --accent-dark: #a8893e;
-      --accent-light: #f5edd8;
-      --success: #16a34a;
-      --danger: #dc2626;
-      --radius: 12px;
-      --radius-sm: 8px;
-      --shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.06);
-      --shadow-lg: 0 8px 32px rgba(0,0,0,.12);
-      --font: 'Inter', sans-serif;
-      --font-display: 'Playfair Display', serif;
-      --nav-h: 64px;
-    }
-
-    html { scroll-behavior: smooth; }
-    body { font-family: var(--font); color: var(--ink); background: var(--surface); line-height: 1.6; }
-
-    /* NAV */
-    nav {
-      position: sticky; top: 0; z-index: 100;
-      height: var(--nav-h);
-      background: rgba(255,255,255,.92);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
-      display: flex; align-items: center;
-    }
-    .nav-inner {
-      max-width: 1280px; margin: 0 auto; padding: 0 24px;
-      width: 100%; display: flex; align-items: center; gap: 32px;
-    }
-    .nav-brand {
-      font-family: var(--font-display); font-size: 1.5rem; font-weight: 700;
-      color: var(--ink); text-decoration: none; letter-spacing: -.5px;
-      flex-shrink: 0;
-    }
-    .nav-brand span { color: var(--accent); }
-
-    .nav-search {
-      flex: 1; max-width: 380px;
-      display: flex; align-items: center;
-      background: var(--surface-alt); border: 1px solid var(--border);
-      border-radius: 999px; padding: 8px 16px; gap: 8px;
-    }
-    .nav-search i { color: var(--ink-faint); font-size: .875rem; }
-    .nav-search input {
-      border: none; background: transparent; outline: none;
-      font-family: var(--font); font-size: .875rem; color: var(--ink); width: 100%;
-    }
-    .nav-search input::placeholder { color: var(--ink-faint); }
-    .nav-search button {
-      background: var(--accent); color: white; border: none; cursor: pointer;
-      border-radius: 999px; padding: 4px 12px; font-size: .75rem; font-weight: 600;
-    }
-
-    .nav-links { display: flex; align-items: center; gap: 4px; margin-left: auto; }
-    .nav-links a {
-      display: flex; align-items: center; gap: 6px;
-      padding: 8px 14px; border-radius: 8px; text-decoration: none;
-      font-size: .875rem; font-weight: 500; color: var(--ink-muted);
-      transition: all .15s;
-    }
-    .nav-links a:hover { color: var(--ink); background: var(--surface-alt); }
-    .nav-links a.nav-cta {
-      background: var(--ink); color: white; padding: 8px 20px;
-    }
-    .nav-links a.nav-cta:hover { background: #2d2d2d; }
-    .nav-badge {
-      background: var(--accent); color: white; font-size: .65rem; font-weight: 700;
-      border-radius: 999px; padding: 1px 6px; min-width: 18px; text-align: center;
-    }
-
-    /* LAYOUT */
-    .container { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
-    .page { padding: 48px 0; }
-
-    /* MESSAGES */
-    .messages-wrap { position: fixed; top: calc(var(--nav-h) + 12px); right: 20px; z-index: 200; display: flex; flex-direction: column; gap: 8px; }
-    .msg {
-      display: flex; align-items: center; gap: 10px;
-      background: var(--ink); color: white; padding: 12px 16px; border-radius: var(--radius-sm);
-      font-size: .875rem; min-width: 260px; max-width: 360px;
-      box-shadow: var(--shadow-lg); animation: slideIn .3s ease;
-    }
-    .msg.success { background: var(--success); }
-    .msg.error { background: var(--danger); }
-    .msg.warning { background: #d97706; }
-    .msg i { font-size: 1rem; flex-shrink: 0; }
-    @keyframes slideIn { from { transform: translateX(110%); opacity: 0; } to { transform: none; opacity: 1; } }
-
-    /* CARDS */
-    .card {
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: var(--radius); overflow: hidden;
-      transition: box-shadow .2s, transform .2s;
-    }
-    .card:hover { box-shadow: var(--shadow-lg); transform: translateY(-2px); }
-
-    /* BUTTONS */
-    .btn {
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 12px 24px; border-radius: var(--radius-sm);
-      font-family: var(--font); font-size: .875rem; font-weight: 600;
-      cursor: pointer; border: none; text-decoration: none;
-      transition: all .15s; white-space: nowrap;
-    }
-    .btn-primary { background: var(--ink); color: white; }
-    .btn-primary:hover { background: #2d2d2d; transform: translateY(-1px); }
-    .btn-accent { background: var(--accent); color: white; }
-    .btn-accent:hover { background: var(--accent-dark); }
-    .btn-outline { background: transparent; color: var(--ink); border: 1.5px solid var(--border); }
-    .btn-outline:hover { border-color: var(--ink); background: var(--surface-alt); }
-    .btn-danger { background: var(--danger); color: white; }
-    .btn-danger:hover { background: #b91c1c; }
-    .btn-sm { padding: 8px 16px; font-size: .8rem; }
-    .btn-full { width: 100%; justify-content: center; }
-
-    /* FORMS */
-    .form-group { margin-bottom: 20px; }
-    .form-label { display: block; font-size: .8rem; font-weight: 600; color: var(--ink-muted); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 6px; }
-    .form-control {
-      width: 100%; padding: 12px 14px; border: 1.5px solid var(--border);
-      border-radius: var(--radius-sm); font-family: var(--font); font-size: .9rem; color: var(--ink);
-      background: var(--surface); outline: none; transition: border-color .15s;
-    }
-    .form-control:focus { border-color: var(--accent); }
-
-    /* PAGE HEADER */
-    .page-header { margin-bottom: 40px; }
-    .page-header h1 { font-family: var(--font-display); font-size: 2rem; font-weight: 700; color: var(--ink); }
-    .page-header p { color: var(--ink-muted); margin-top: 6px; }
-
-    /* GRID */
-    .product-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-      gap: 24px;
-    }
-
-    /* EMPTY STATE */
-    .empty-state {
-      text-align: center; padding: 80px 24px;
-    }
-    .empty-state .empty-icon {
-      font-size: 3rem; color: var(--ink-faint); margin-bottom: 16px;
-    }
-    .empty-state h3 { font-size: 1.25rem; font-weight: 600; margin-bottom: 8px; }
-    .empty-state p { color: var(--ink-muted); margin-bottom: 24px; }
-
-    /* DIVIDER */
-    .divider { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
-
-    /* BADGE */
-    .badge {
-      display: inline-block; padding: 3px 10px; border-radius: 999px;
-      font-size: .75rem; font-weight: 600;
-    }
-    .badge-muted { background: var(--surface-alt); color: var(--ink-muted); }
-    .badge-accent { background: var(--accent-light); color: var(--accent-dark); }
-    .badge-success { background: #dcfce7; color: var(--success); }
-    .badge-danger { background: #fee2e2; color: var(--danger); }
-
-    /* FOOTER */
-    footer {
-      margin-top: 80px; border-top: 1px solid var(--border);
-      padding: 40px 0; background: var(--surface-alt);
-    }
-    .footer-inner {
-      max-width: 1280px; margin: 0 auto; padding: 0 24px;
-      display: flex; justify-content: space-between; align-items: center;
-      flex-wrap: wrap; gap: 16px;
-    }
-    .footer-brand { font-family: var(--font-display); font-size: 1.25rem; font-weight: 700; }
-    .footer-brand span { color: var(--accent); }
-    .footer-copy { color: var(--ink-muted); font-size: .875rem; }
-    .footer-links { display: flex; gap: 20px; }
-    .footer-links a { color: var(--ink-muted); text-decoration: none; font-size: .875rem; transition: color .15s; }
-    .footer-links a:hover { color: var(--ink); }
-
-    @media (max-width: 768px) {
-      .nav-search { display: none; }
-      .nav-links a span { display: none; }
-      .nav-links a { padding: 8px 10px; }
-    }
-  </style>
+  
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   {% block extra_head %}{% endblock %}
 </head>
-<body>
+<body class="bg-light d-flex flex-column min-vh-100">
 
-<nav>
-  <div class="nav-inner">
-    <a href="/" class="nav-brand">LUXE<span>.</span></a>
+<!-- NAV -->
+<nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom sticky-top shadow-sm">
+  <div class="container-fluid px-4">
+    <a class="navbar-brand fw-bold fs-4" href="/">LUXE<span class="text-warning">.</span></a>
+    
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
-    <form class="nav-search" method="GET" action="/">
-      <i class="fa fa-search"></i>
-      <input type="text" name="q" placeholder="Search products…" value="{{ request.GET.q }}">
-      <button type="submit">Go</button>
-    </form>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <form class="d-flex mx-auto w-100 mt-3 mt-lg-0" style="max-width: 400px;" method="GET" action="/">
+        <div class="input-group">
+          <input class="form-control rounded-start-pill border-end-0 shadow-none" type="search" name="q" placeholder="Search products…" value="{{ request.GET.q }}">
+          <button class="btn btn-warning rounded-end-pill text-white fw-bold px-3 shadow-none" type="submit"><i class="fa fa-search"></i></button>
+        </div>
+      </form>
 
-    <div class="nav-links">
-      {% if user.is_authenticated %}
-        <a href="{% url 'wishlist' %}"><i class="fa fa-heart"></i><span>Wishlist</span></a>
-        <a href="{% url 'cart' %}"><i class="fa fa-shopping-bag"></i><span>Cart</span></a>
-        <a href="{% url 'order_history' %}"><i class="fa fa-box"></i><span>Orders</span></a>
-        <form method="POST" action="{% url 'logout' %}" style="margin:0;">
-          {% csrf_token %}
-          <button type="submit" class="nav-cta btn" style="border:none;cursor:pointer;">
-            <i class="fa fa-sign-out-alt"></i><span>Logout</span>
-          </button>
-        </form>
-      {% else %}
-        <a href="{% url 'login' %}"><i class="fa fa-sign-in-alt"></i><span>Login</span></a>
-        <a href="{% url 'register' %}" class="nav-cta"><span>Sign Up</span></a>
-      {% endif %}
+      <ul class="navbar-nav ms-auto align-items-center mt-3 mt-lg-0 gap-2">
+        {% if user.is_authenticated %}
+          <li class="nav-item">
+            <a class="nav-link text-secondary fw-semibold" href="{% url 'wishlist' %}"><i class="fa fa-heart me-1"></i> Wishlist</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-secondary fw-semibold" href="{% url 'cart' %}"><i class="fa fa-shopping-bag me-1"></i> Cart</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-secondary fw-semibold" href="{% url 'order_history' %}"><i class="fa fa-box me-1"></i> Orders</a>
+          </li>
+          <li class="nav-item">
+            <form method="POST" action="{% url 'logout' %}" class="m-0">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-dark fw-semibold rounded-pill px-3 py-2 ms-lg-2">
+                <i class="fa fa-sign-out-alt me-1"></i> Logout
+              </button>
+            </form>
+          </li>
+        {% else %}
+          <li class="nav-item">
+            <a class="nav-link text-secondary fw-semibold" href="{% url 'login' %}"><i class="fa fa-sign-in-alt me-1"></i> Login</a>
+          </li>
+          <li class="nav-item">
+            <a class="btn btn-dark fw-semibold rounded-pill px-4 py-2 ms-lg-2" href="{% url 'register' %}">Sign Up</a>
+          </li>
+        {% endif %}
+      </ul>
     </div>
   </div>
 </nav>
 
+<!-- MESSAGES -->
 {% if messages %}
-<div class="messages-wrap">
+<div class="position-fixed top-0 end-0 p-3" style="z-index: 1050; margin-top: 70px;">
   {% for message in messages %}
-  <div class="msg {{ message.tags }}">
-    {% if message.tags == 'success' %}<i class="fa fa-check-circle"></i>
-    {% elif message.tags == 'error' %}<i class="fa fa-exclamation-circle"></i>
-    {% else %}<i class="fa fa-info-circle"></i>{% endif %}
+  <div class="alert alert-{% if message.tags == 'error' %}danger{% elif message.tags == 'success' %}success{% else %}info{% endif %} alert-dismissible fade show shadow-sm" role="alert">
     {{ message }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
   </div>
   {% endfor %}
 </div>
-<script>
-  setTimeout(() => {
-    document.querySelectorAll('.msg').forEach(m => {
-      m.style.transition = 'opacity .4s, transform .4s';
-      m.style.opacity = '0'; m.style.transform = 'translateX(110%)';
-      setTimeout(() => m.remove(), 400);
-    });
-  }, 3500);
-</script>
 {% endif %}
 
-<main>
+<!-- MAIN -->
+<main class="flex-grow-1">
   {% block content %}{% endblock %}
 </main>
 
-<footer>
-  <div class="footer-inner">
-    <div class="footer-brand">LUXE<span>.</span></div>
-    <div class="footer-copy">© 2025 LUXE Store. All rights reserved.</div>
-    <div class="footer-links">
-      <a href="/">Shop</a>
-      <a href="{% url 'cart' %}">Cart</a>
-      <a href="{% url 'order_history' %}">Orders</a>
+<!-- FOOTER -->
+<footer class="bg-white border-top py-4 mt-auto">
+  <div class="container-fluid px-4">
+    <div class="row align-items-center">
+      <div class="col-md-4 text-center text-md-start mb-3 mb-md-0">
+        <span class="fs-5 fw-bold">LUXE<span class="text-warning">.</span></span>
+      </div>
+      <div class="col-md-4 text-center text-secondary mb-3 mb-md-0 small">
+        © 2025 LUXE Store. All rights reserved.
+      </div>
+      <div class="col-md-4 text-center text-md-end">
+        <a href="/" class="text-secondary text-decoration-none me-3 small">Shop</a>
+        <a href="{% url 'cart' %}" class="text-secondary text-decoration-none me-3 small">Cart</a>
+        <a href="{% url 'order_history' %}" class="text-secondary text-decoration-none small">Orders</a>
+      </div>
     </div>
   </div>
 </footer>
 
+<!-- Bootstrap 5 JS Bundle -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

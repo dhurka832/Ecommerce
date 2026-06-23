@@ -3,113 +3,98 @@
 
 {% block extra_head %}
 <script src="https://js.stripe.com/v3/"></script>
-<style>
-  .checkout-layout { display: grid; grid-template-columns: 1fr 380px; gap: 40px; align-items: start; }
-
-  .checkout-section { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; margin-bottom: 20px; }
-  .checkout-section-title { font-size: .75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: var(--ink-muted); margin-bottom: 20px; display: flex; align-items: center; gap: 8px; }
-  .checkout-section-title i { color: var(--accent); }
-
-  #card-element {
-    padding: 14px; border: 1.5px solid var(--border); border-radius: var(--radius-sm);
-    background: var(--surface); transition: border-color .15s;
-  }
-  #card-element.StripeElement--focus { border-color: var(--accent); }
-  #card-errors { color: var(--danger); font-size: .85rem; margin-top: 8px; }
-
-  .order-items-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
-  .order-item-row { display: flex; align-items: center; gap: 12px; }
-  .order-item-img {
-    width: 56px; height: 56px; border-radius: 8px; overflow: hidden;
-    background: var(--surface-alt); flex-shrink: 0;
-    display: flex; align-items: center; justify-content: center;
-  }
-  .order-item-img img { width: 100%; height: 100%; object-fit: cover; }
-  .order-item-img .no-img { font-size: 1.2rem; color: var(--border); }
-  .order-item-info { flex: 1; }
-  .order-item-name { font-size: .875rem; font-weight: 600; }
-  .order-item-qty { font-size: .75rem; color: var(--ink-muted); }
-  .order-item-price { font-weight: 700; font-size: .875rem; }
-
-  .summary-box { background: var(--surface-alt); border-radius: var(--radius); padding: 24px; }
-  .summary-box .summary-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: .875rem; color: var(--ink-muted); }
-  .summary-box .summary-total { display: flex; justify-content: space-between; font-weight: 700; font-size: 1.1rem; padding-top: 12px; border-top: 1px solid var(--border); }
-
-  .secure-note { display: flex; align-items: center; gap: 8px; font-size: .75rem; color: var(--ink-muted); text-align: center; justify-content: center; margin-top: 12px; }
-
-  @media (max-width: 900px) {
-    .checkout-layout { grid-template-columns: 1fr; }
-  }
-</style>
 {% endblock %}
 
 {% block content %}
-<div class="page">
+<div class="py-5">
   <div class="container">
 
-    <div class="page-header">
-      <h1>Checkout</h1>
-      <p>Complete your purchase securely</p>
+    <div class="mb-5">
+      <h1 class="display-5 fw-bold text-dark">Checkout</h1>
+      <p class="text-secondary">Complete your purchase securely</p>
     </div>
 
-    <div class="checkout-layout">
+    <div class="row g-5">
 
       <!-- PAYMENT FORM -->
-      <div>
-        <div class="checkout-section">
-          <div class="checkout-section-title"><i class="fa fa-credit-card"></i> Payment Details</div>
-          <form id="payment-form" method="POST">
-            {% csrf_token %}
-            <div class="form-group">
-              <label class="form-label">Card Information</label>
-              <div id="card-element"></div>
-              <div id="card-errors" role="alert"></div>
-            </div>
-            <div style="margin-top:8px;">
-              <p style="font-size:.8rem; color:var(--ink-muted);">
-                <i class="fa fa-lock" style="color:var(--accent)"></i>
-                Test with card: <strong>4242 4242 4242 4242</strong>, any future date, any CVC.
-              </p>
-            </div>
-            <div style="margin-top:24px;">
-              <button type="submit" id="pay-btn" class="btn btn-primary btn-full" style="font-size:1rem; padding:14px;">
-                <i class="fa fa-lock"></i> Pay ₹{{ total|floatformat:0 }}
+      <div class="col-lg-7">
+        <div class="card shadow-sm border-0 mb-4">
+          <div class="card-body p-4 p-md-5">
+            <h5 class="fw-bold text-uppercase tracking-wide text-secondary small mb-4">
+              <i class="fa fa-credit-card text-warning me-2"></i> Payment Details
+            </h5>
+            
+            <form id="payment-form" method="POST">
+              {% csrf_token %}
+              <div class="mb-4">
+                <label class="form-label fw-bold small text-secondary text-uppercase">Card Information</label>
+                <div id="card-element" class="form-control p-3 bg-light"></div>
+                <div id="card-errors" class="text-danger small mt-2 fw-bold" role="alert"></div>
+              </div>
+              
+              <div class="mb-4">
+                <p class="small text-secondary bg-light p-3 rounded border border-secondary-subtle">
+                  <i class="fa fa-info-circle text-info me-2"></i>
+                  Test with card: <strong>4242 4242 4242 4242</strong>, any future date, any CVC.
+                </p>
+              </div>
+              
+              <button type="submit" id="pay-btn" class="btn btn-dark w-100 py-3 fw-bold fs-5 shadow-sm">
+                <i class="fa fa-lock me-2"></i> Pay ₹{{ total|floatformat:0 }}
               </button>
-            </div>
-            <div class="secure-note">
-              <i class="fa fa-shield-alt" style="color:var(--success)"></i>
-              Your payment is protected by Stripe 256-bit SSL encryption
-            </div>
-          </form>
+              
+              <div class="text-center mt-3 text-secondary small">
+                <i class="fa fa-shield-alt text-success me-1"></i> Your payment is protected by Stripe 256-bit SSL encryption
+              </div>
+            </form>
+            
+          </div>
         </div>
       </div>
 
       <!-- ORDER SUMMARY -->
-      <div>
-        <div class="checkout-section">
-          <div class="checkout-section-title"><i class="fa fa-box"></i> Order Items</div>
-          <div class="order-items-list">
-            {% for item in items %}
-            <div class="order-item-row">
-              <div class="order-item-img">
-                {% if item.product.image %}
-                  <img src="/media/{{ item.product.image }}" alt="{{ item.product.name }}">
-                {% else %}
-                  <span class="no-img"><i class="fa fa-image"></i></span>
-                {% endif %}
+      <div class="col-lg-5">
+        <div class="card shadow-sm border-0 bg-light sticky-top" style="top: 100px;">
+          <div class="card-body p-4 p-md-5">
+            <h5 class="fw-bold text-uppercase tracking-wide text-secondary small mb-4">
+              <i class="fa fa-box text-warning me-2"></i> Order Items
+            </h5>
+            
+            <div class="d-flex flex-column gap-3 mb-4">
+              {% for item in items %}
+              <div class="d-flex align-items-center gap-3 bg-white p-3 rounded shadow-sm">
+                <div class="bg-light rounded overflow-hidden flex-shrink-0 d-flex align-items-center justify-content-center" style="width: 64px; height: 64px;">
+                  {% if item.product.image %}
+                    <img src="/media/{{ item.product.image }}" alt="{{ item.product.name }}" class="w-100 h-100 object-fit-cover">
+                  {% else %}
+                    <span class="text-secondary fs-4"><i class="fa fa-image"></i></span>
+                  {% endif %}
+                </div>
+                <div class="flex-grow-1 min-w-0">
+                  <div class="fw-bold text-dark text-truncate" style="font-size: 0.95rem;">{{ item.product.name }}</div>
+                  <div class="text-secondary small">Qty: {{ item.quantity }}</div>
+                </div>
+                <div class="fw-bold text-dark text-end ms-2" style="font-size: 0.95rem;">₹{{ item.product.price|floatformat:0 }}</div>
               </div>
-              <div class="order-item-info">
-                <div class="order-item-name">{{ item.product.name|truncatechars:28 }}</div>
-                <div class="order-item-qty">Qty: {{ item.quantity }}</div>
-              </div>
-              <div class="order-item-price">₹{{ item.product.price|floatformat:0 }}</div>
+              {% endfor %}
             </div>
-            {% endfor %}
-          </div>
-          <div class="summary-box">
-            <div class="summary-row"><span>Subtotal</span><span>₹{{ total|floatformat:0 }}</span></div>
-            <div class="summary-row"><span>Delivery</span><span style="color:var(--success)">Free</span></div>
-            <div class="summary-total"><span>Total</span><span>₹{{ total|floatformat:0 }}</span></div>
+            
+            <div class="p-4 bg-white rounded shadow-sm">
+              <div class="d-flex justify-content-between mb-2 text-secondary small">
+                <span>Subtotal</span>
+                <span>₹{{ total|floatformat:0 }}</span>
+              </div>
+              <div class="d-flex justify-content-between mb-3 text-secondary small">
+                <span>Delivery</span>
+                <span class="text-success fw-bold">Free</span>
+              </div>
+              <hr class="text-secondary opacity-25 my-3">
+              <div class="d-flex justify-content-between fw-bold fs-5 text-dark">
+                <span>Total</span>
+                <span>₹{{ total|floatformat:0 }}</span>
+              </div>
+            </div>
+            
           </div>
         </div>
       </div>
@@ -124,8 +109,10 @@
   const card = elements.create('card', {
     style: {
       base: {
-        fontFamily: 'Inter, sans-serif', fontSize: '15px',
-        color: '#0f0f0f', '::placeholder': { color: '#9ca3af' }
+        fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif', 
+        fontSize: '16px',
+        color: '#212529', 
+        '::placeholder': { color: '#6c757d' }
       }
     }
   });
@@ -136,14 +123,18 @@
   document.getElementById('payment-form').addEventListener('submit', async e => {
     e.preventDefault();
     const btn = document.getElementById('pay-btn');
-    btn.disabled = true; btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Processing…';
+    btn.disabled = true; 
+    btn.innerHTML = '<i class="fa fa-spinner fa-spin me-2"></i> Processing…';
     const { token, error } = await stripe.createToken(card);
     if (error) {
       document.getElementById('card-errors').textContent = error.message;
-      btn.disabled = false; btn.innerHTML = '<i class="fa fa-lock"></i> Pay ₹{{ total|floatformat:0 }}';
+      btn.disabled = false; 
+      btn.innerHTML = '<i class="fa fa-lock me-2"></i> Pay ₹{{ total|floatformat:0 }}';
     } else {
       const input = document.createElement('input');
-      input.type = 'hidden'; input.name = 'stripeToken'; input.value = token.id;
+      input.type = 'hidden'; 
+      input.name = 'stripeToken'; 
+      input.value = token.id;
       e.target.appendChild(input);
       e.target.submit();
     }

@@ -1,173 +1,119 @@
 {% extends 'store/base.html' %}
 {% block title %}Your Cart — LUXE Store{% endblock %}
 
-{% block extra_head %}
-<style>
-  .cart-layout { display: grid; grid-template-columns: 1fr 360px; gap: 40px; align-items: start; }
-
-  .cart-item {
-    display: flex; gap: 20px; padding: 20px 0;
-    border-bottom: 1px solid var(--border); align-items: center;
-  }
-  .cart-item:last-child { border-bottom: none; }
-  .cart-item-img {
-    width: 88px; height: 88px; flex-shrink: 0;
-    border-radius: var(--radius-sm); overflow: hidden;
-    background: var(--surface-alt); display: flex; align-items: center; justify-content: center;
-  }
-  .cart-item-img img { width: 100%; height: 100%; object-fit: cover; }
-  .cart-item-img .no-img { font-size: 1.5rem; color: var(--border); }
-  .cart-item-info { flex: 1; }
-  .cart-item-cat { font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--accent); margin-bottom: 4px; }
-  .cart-item-name { font-weight: 600; font-size: .95rem; margin-bottom: 4px; }
-  .cart-item-unit { font-size: .8rem; color: var(--ink-muted); }
-  .cart-item-controls { display: flex; align-items: center; gap: 12px; }
-
-  /* QTY STEPPER */
-  .qty-stepper { display: flex; align-items: center; gap: 0; border: 1.5px solid var(--border); border-radius: var(--radius-sm); overflow: hidden; }
-  .qty-btn {
-    width: 34px; height: 34px; border: none; background: var(--surface-alt);
-    cursor: pointer; font-size: 1rem; color: var(--ink); display: flex; align-items: center; justify-content: center;
-    transition: background .15s, color .15s; flex-shrink: 0; line-height: 1;
-  }
-  .qty-btn:hover { background: var(--ink); color: white; }
-  .qty-btn:disabled { opacity: .35; cursor: not-allowed; }
-  .qty-btn:disabled:hover { background: var(--surface-alt); color: var(--ink); }
-  .qty-display {
-    min-width: 42px; text-align: center; font-size: .9rem; font-weight: 700;
-    color: var(--ink); padding: 0 8px; border-left: 1.5px solid var(--border); border-right: 1.5px solid var(--border);
-    height: 34px; display: flex; align-items: center; justify-content: center;
-  }
-  .qty-form { display: none; }
-
-  .remove-btn {
-    display: flex; align-items: center; gap: 6px;
-    color: var(--danger); font-size: .8rem; text-decoration: none;
-    padding: 6px 10px; border-radius: var(--radius-sm); transition: background .15s;
-  }
-  .remove-btn:hover { background: #fee2e2; }
-  .cart-item-price { font-size: 1rem; font-weight: 700; text-align: right; flex-shrink: 0; min-width: 80px; }
-  .cart-item-price .item-total { display: block; }
-  .cart-item-price .item-unit { display: block; font-size: .75rem; font-weight: 400; color: var(--ink-muted); margin-top: 2px; }
-
-  /* SUMMARY */
-  .order-summary {
-    background: var(--surface-alt); border: 1px solid var(--border);
-    border-radius: var(--radius); padding: 28px;
-    position: sticky; top: calc(var(--nav-h) + 24px);
-  }
-  .summary-title { font-family: var(--font-display); font-size: 1.25rem; font-weight: 700; margin-bottom: 20px; }
-  .summary-row { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: .875rem; color: var(--ink-muted); }
-  .summary-divider { border: none; border-top: 1px solid var(--border); margin: 16px 0; }
-  .summary-total { display: flex; justify-content: space-between; font-weight: 700; font-size: 1.1rem; }
-
-  .promo-wrap { margin-top: 20px; margin-bottom: 20px; }
-  .promo-input-row { display: flex; gap: 8px; }
-  .promo-input {
-    flex: 1; padding: 10px 12px; border: 1.5px solid var(--border);
-    border-radius: var(--radius-sm); font-family: var(--font); font-size: .875rem;
-    background: var(--surface); outline: none;
-  }
-  .promo-input:focus { border-color: var(--accent); }
-
-  @media (max-width: 900px) {
-    .cart-layout { grid-template-columns: 1fr; }
-    .order-summary { position: static; }
-  }
-</style>
-{% endblock %}
-
 {% block content %}
-<div class="page">
+<div class="py-5">
   <div class="container">
 
-    <div class="page-header">
-      <h1>Your Cart</h1>
-      <p>{{ items.count }} item{{ items.count|pluralize }} in your cart</p>
+    <div class="mb-5">
+      <h1 class="display-5 fw-bold text-dark">Your Cart</h1>
+      <p class="text-secondary">{{ items.count }} item{{ items.count|pluralize }} in your cart</p>
     </div>
 
     {% if items %}
-    <div class="cart-layout">
+    <div class="row g-5">
 
       <!-- ITEMS -->
-      <div>
-        <div class="card" style="padding: 0 24px;">
-          {% for item in items %}
-          <div class="cart-item">
-            <div class="cart-item-img">
-              {% if item.product.image %}
-                <img src="/media/{{ item.product.image }}" alt="{{ item.product.name }}">
-              {% else %}
-                <span class="no-img"><i class="fa fa-image"></i></span>
-              {% endif %}
-            </div>
-            <div class="cart-item-info">
-              <div class="cart-item-cat">{{ item.product.category.name }}</div>
-              <div class="cart-item-name">{{ item.product.name }}</div>
-              <div class="cart-item-unit">₹{{ item.product.price|floatformat:0 }} each</div>
-              <div style="margin-top:10px; display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
-                <!-- Hidden form for actual submission -->
-                <form method="POST" action="{% url 'update_cart' item.pk %}" class="qty-form" id="form-{{ item.pk }}">
-                  {% csrf_token %}
-                  <input type="number" name="quantity" value="{{ item.quantity }}" min="0" id="qty-input-{{ item.pk }}">
-                </form>
-                <!-- +/- Stepper -->
-                <div class="qty-stepper">
-                  <button class="qty-btn" type="button"
-                    onclick="changeQty({{ item.pk }}, -1)"
-                    id="btn-minus-{{ item.pk }}"
-                    {% if item.quantity <= 1 %}disabled{% endif %}>−</button>
-                  <span class="qty-display" id="qty-display-{{ item.pk }}">{{ item.quantity }}</span>
-                  <button class="qty-btn" type="button"
-                    onclick="changeQty({{ item.pk }}, 1)">+</button>
+      <div class="col-lg-8">
+        <div class="card shadow-sm border-0 mb-4">
+          <div class="card-body p-0">
+            {% for item in items %}
+            <div class="d-flex align-items-center p-4 border-bottom {% if forloop.last %}border-0{% endif %} flex-wrap gap-3">
+              <div class="bg-light rounded d-flex align-items-center justify-content-center overflow-hidden flex-shrink-0" style="width: 88px; height: 88px;">
+                {% if item.product.image %}
+                  <img src="/media/{{ item.product.image }}" alt="{{ item.product.name }}" class="w-100 h-100 object-fit-cover">
+                {% else %}
+                  <span class="text-secondary fs-4"><i class="fa fa-image"></i></span>
+                {% endif %}
+              </div>
+              
+              <div class="flex-grow-1">
+                <div class="text-warning small fw-bold text-uppercase tracking-wide mb-1">{{ item.product.category.name }}</div>
+                <h5 class="fw-bold mb-1 fs-6">{{ item.product.name }}</h5>
+                <div class="text-secondary small mb-2">₹{{ item.product.price|floatformat:0 }} each</div>
+                
+                <div class="d-flex align-items-center gap-3 flex-wrap mt-2">
+                  <!-- Hidden form for actual submission -->
+                  <form method="POST" action="{% url 'update_cart' item.pk %}" class="d-none" id="form-{{ item.pk }}">
+                    {% csrf_token %}
+                    <input type="number" name="quantity" value="{{ item.quantity }}" min="0" id="qty-input-{{ item.pk }}">
+                  </form>
+                  
+                  <!-- +/- Stepper -->
+                  <div class="input-group input-group-sm" style="width: 110px;">
+                    <button class="btn btn-outline-secondary" type="button" 
+                      onclick="changeQty({{ item.pk }}, -1)" 
+                      id="btn-minus-{{ item.pk }}" 
+                      {% if item.quantity <= 1 %}disabled{% endif %}>−</button>
+                    <span class="input-group-text bg-white fw-bold px-3" id="qty-display-{{ item.pk }}">{{ item.quantity }}</span>
+                    <button class="btn btn-outline-secondary" type="button" 
+                      onclick="changeQty({{ item.pk }}, 1)">+</button>
+                  </div>
+                  
+                  <a href="{% url 'remove_from_cart' item.pk %}" class="btn btn-sm btn-outline-danger border-0">
+                    <i class="fa fa-trash"></i> Remove
+                  </a>
                 </div>
-                <a href="{% url 'remove_from_cart' item.pk %}" class="remove-btn">
-                  <i class="fa fa-trash"></i> Remove
-                </a>
+              </div>
+              
+              <div class="text-end ms-auto" id="price-{{ item.pk }}">
+                <div class="fw-bold fs-5 text-dark">₹<span id="total-{{ item.pk }}">{{ item.product.price|floatformat:0 }}</span></div>
+                <div class="text-secondary small" data-unit="{{ item.product.price }}">₹{{ item.product.price|floatformat:0 }} each</div>
               </div>
             </div>
-            <div class="cart-item-price" id="price-{{ item.pk }}">
-              <span class="item-total">₹<span id="total-{{ item.pk }}">{{ item.product.price|floatformat:0 }}</span></span>
-              <span class="item-unit" data-unit="{{ item.product.price }}">₹{{ item.product.price|floatformat:0 }} each</span>
-            </div>
+            {% endfor %}
           </div>
-          {% endfor %}
         </div>
-        <div style="margin-top:16px; display:flex; justify-content:space-between;">
-          <a href="/" class="btn btn-outline btn-sm"><i class="fa fa-arrow-left"></i> Continue Shopping</a>
+        
+        <div class="d-flex justify-content-between">
+          <a href="/" class="btn btn-outline-secondary btn-sm"><i class="fa fa-arrow-left me-1"></i> Continue Shopping</a>
         </div>
       </div>
 
       <!-- SUMMARY -->
-      <div class="order-summary">
-        <div class="summary-title">Order Summary</div>
-        {% for item in items %}
-        <div class="summary-row">
-          <span>{{ item.product.name|truncatechars:22 }} × {{ item.quantity }}</span>
-          <span>₹{{ item.product.price|floatformat:0 }}</span>
+      <div class="col-lg-4">
+        <div class="card bg-light border-0 shadow-sm sticky-top" style="top: 100px;">
+          <div class="card-body p-4">
+            <h4 class="fw-bold mb-4">Order Summary</h4>
+            
+            {% for item in items %}
+            <div class="d-flex justify-content-between mb-2 text-secondary small">
+              <span>{{ item.product.name|truncatechars:22 }} × {{ item.quantity }}</span>
+              <span>₹{{ item.product.price|floatformat:0 }}</span>
+            </div>
+            {% endfor %}
+            
+            <div class="d-flex justify-content-between mb-3 text-secondary small">
+              <span>Delivery</span>
+              <span class="text-success fw-bold">Free</span>
+            </div>
+            
+            <hr class="text-secondary opacity-25 my-3">
+            
+            <div class="d-flex justify-content-between fw-bold fs-5 text-dark mb-4">
+              <span>Total</span>
+              <span>₹{{ total|floatformat:0 }}</span>
+            </div>
+            
+            <a href="{% url 'checkout' %}" class="btn btn-dark w-100 py-2 fw-bold fs-6">
+              <i class="fa fa-lock me-1"></i> Secure Checkout
+            </a>
+            
+            <div class="text-center text-secondary small mt-3">
+              <i class="fa fa-shield-alt"></i> 256-bit SSL encrypted
+            </div>
+          </div>
         </div>
-        {% endfor %}
-        <div class="summary-row"><span>Delivery</span><span style="color:var(--success)">Free</span></div>
-        <hr class="summary-divider">
-        <div class="summary-total"><span>Total</span><span>₹{{ total|floatformat:0 }}</span></div>
-        <div style="margin-top:24px;">
-          <a href="{% url 'checkout' %}" class="btn btn-primary btn-full" style="font-size:1rem; padding:14px;">
-            <i class="fa fa-lock"></i> Secure Checkout
-          </a>
-        </div>
-        <p style="text-align:center; font-size:.75rem; color:var(--ink-muted); margin-top:12px;">
-          <i class="fa fa-shield-alt"></i> 256-bit SSL encrypted
-        </p>
       </div>
 
     </div>
 
     {% else %}
-    <div class="empty-state">
-      <div class="empty-icon"><i class="fa fa-shopping-cart"></i></div>
-      <h3>Your cart is empty</h3>
-      <p>Looks like you haven't added anything yet. Start shopping!</p>
-      <a href="/" class="btn btn-primary"><i class="fa fa-arrow-right"></i> Browse Products</a>
+    <div class="text-center py-5">
+      <div class="text-secondary mb-3"><i class="fa fa-shopping-cart fa-3x"></i></div>
+      <h3 class="fw-bold">Your cart is empty</h3>
+      <p class="text-secondary mb-4">Looks like you haven't added anything yet. Start shopping!</p>
+      <a href="/" class="btn btn-dark"><i class="fa fa-arrow-right me-1"></i> Browse Products</a>
     </div>
     {% endif %}
 
@@ -181,7 +127,7 @@
     const minusBtn = document.getElementById('btn-minus-' + itemId);
     const totalEl  = document.getElementById('total-' + itemId);
     const unitPrice = parseFloat(
-      document.querySelector('#price-' + itemId + ' .item-unit').dataset.unit
+      document.querySelector('#price-' + itemId + ' div[data-unit]').dataset.unit
     );
 
     let next = parseInt(display.textContent) + delta;

@@ -1,62 +1,58 @@
 {% extends 'store/base.html' %}
 {% block title %}Order History — LUXE Store{% endblock %}
 
-{% block extra_head %}
-<style>
-  .orders-list { display: flex; flex-direction: column; gap: 16px; }
-  .order-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; }
-  .order-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px; }
-  .order-id { font-size: .75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--ink-muted); }
-  .order-date { font-size: .8rem; color: var(--ink-muted); }
-  .order-meta { display: flex; align-items: center; gap: 12px; }
-  .order-total { font-size: 1.2rem; font-weight: 700; }
-  .order-items-preview { display: flex; gap: 8px; flex-wrap: wrap; }
-  .order-item-chip {
-    background: var(--surface-alt); border: 1px solid var(--border);
-    border-radius: 6px; padding: 4px 10px; font-size: .78rem; color: var(--ink-muted);
-  }
-</style>
-{% endblock %}
-
 {% block content %}
-<div class="page">
+<div class="py-5">
   <div class="container">
 
-    <div class="page-header">
-      <h1>Order History</h1>
-      <p>{{ orders.count }} order{{ orders.count|pluralize }} placed</p>
+    <div class="mb-5">
+      <h1 class="display-5 fw-bold text-dark">Order History</h1>
+      <p class="text-secondary">{{ orders.count }} order{{ orders.count|pluralize }} placed</p>
     </div>
 
     {% if orders %}
-    <div class="orders-list">
+    <div class="d-flex flex-column gap-4">
       {% for order in orders %}
-      <div class="order-card">
-        <div class="order-header">
-          <div>
-            <div class="order-id">Order #{{ order.pk }}</div>
-            <div class="order-date"><i class="fa fa-calendar" style="color:var(--accent)"></i> {{ order.created_at|date:"M d, Y" }}</div>
+      <div class="card shadow-sm border-0 bg-white">
+        <div class="card-body p-4 p-md-5">
+          <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4 pb-4 border-bottom">
+            <div>
+              <div class="text-secondary small fw-bold text-uppercase tracking-wide mb-1">Order #{{ order.pk }}</div>
+              <div class="text-secondary small">
+                <i class="fa fa-calendar text-warning me-1"></i> {{ order.created_at|date:"M d, Y" }}
+              </div>
+            </div>
+            <div class="d-flex align-items-center gap-3">
+              {% if order.status == 'Paid' %}
+                <span class="badge bg-success-subtle text-success px-3 py-2 rounded-pill">Paid</span>
+              {% else %}
+                <span class="badge bg-secondary-subtle text-secondary px-3 py-2 rounded-pill">{{ order.status }}</span>
+              {% endif %}
+              <div class="fs-4 fw-bold text-dark">₹{{ order.total_price|floatformat:0 }}</div>
+            </div>
           </div>
-          <div class="order-meta">
-            <span class="badge {% if order.status == 'Paid' %}badge-success{% else %}badge-muted{% endif %}">{{ order.status }}</span>
-            <div class="order-total">₹{{ order.total_price|floatformat:0 }}</div>
+          
+          <div class="d-flex flex-wrap gap-2">
+            {% for oi in order.orderitem_set.all %}
+              <span class="bg-light border border-secondary-subtle rounded-pill px-3 py-1 small text-secondary">
+                {{ oi.product.name|truncatechars:20 }} × {{ oi.quantity }}
+              </span>
+            {% empty %}
+              <span class="bg-light border border-secondary-subtle rounded-pill px-3 py-1 small text-secondary">
+                No items recorded
+              </span>
+            {% endfor %}
           </div>
-        </div>
-        <div class="order-items-preview">
-          {% for oi in order.orderitem_set.all %}
-            <span class="order-item-chip">{{ oi.product.name|truncatechars:20 }} × {{ oi.quantity }}</span>
-          {% empty %}
-            <span class="order-item-chip">No items recorded</span>
-          {% endfor %}
         </div>
       </div>
       {% endfor %}
     </div>
     {% else %}
-    <div class="empty-state">
-      <div class="empty-icon"><i class="fa fa-box-open"></i></div>
-      <h3>No orders yet</h3>
-      <p>Once you place an order, it'll show up here.</p>
-      <a href="/" class="btn btn-primary"><i class="fa fa-arrow-right"></i> Start Shopping</a>
+    <div class="text-center py-5">
+      <div class="text-secondary mb-3"><i class="fa fa-box-open fa-3x"></i></div>
+      <h3 class="fw-bold">No orders yet</h3>
+      <p class="text-secondary mb-4">Once you place an order, it'll show up here.</p>
+      <a href="/" class="btn btn-dark"><i class="fa fa-arrow-right me-1"></i> Start Shopping</a>
     </div>
     {% endif %}
 

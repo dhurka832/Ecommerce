@@ -1,122 +1,69 @@
 {% extends 'store/base.html' %}
 {% block title %}{{ product.name }} — LUXE Store{% endblock %}
 
-{% block extra_head %}
-<style>
-  .breadcrumb { display: flex; align-items: center; gap: 8px; margin-bottom: 32px; }
-  .breadcrumb a { color: var(--ink-muted); text-decoration: none; font-size: .875rem; transition: color .15s; }
-  .breadcrumb a:hover { color: var(--ink); }
-  .breadcrumb i { color: var(--border); font-size: .75rem; }
-  .breadcrumb span { font-size: .875rem; color: var(--ink); font-weight: 500; }
-
-  .product-layout {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: start;
-  }
-  .product-image-wrap {
-    border-radius: var(--radius); overflow: hidden;
-    background: var(--surface-alt); aspect-ratio: 1;
-    display: flex; align-items: center; justify-content: center;
-    position: sticky; top: calc(var(--nav-h) + 24px);
-  }
-  .product-image-wrap img { width: 100%; height: 100%; object-fit: cover; }
-  .product-image-wrap .no-img { font-size: 5rem; color: var(--border); }
-
-  .product-info { padding: 8px 0; }
-  .product-info .cat-tag {
-    display: inline-block; font-size: .7rem; font-weight: 700; text-transform: uppercase;
-    letter-spacing: 2px; color: var(--accent); margin-bottom: 12px;
-  }
-  .product-info h1 {
-    font-family: var(--font-display); font-size: 2rem; font-weight: 700;
-    line-height: 1.2; margin-bottom: 16px;
-  }
-  .product-price-big {
-    font-size: 2.5rem; font-weight: 700; color: var(--ink); margin-bottom: 8px;
-  }
-  .product-price-big span { font-size: 1.2rem; color: var(--ink-muted); font-weight: 400; }
-  .price-note { font-size: .8rem; color: var(--ink-muted); margin-bottom: 28px; }
-  .price-note i { color: var(--success); margin-right: 4px; }
-
-  .divider-line { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
-
-  .product-info .desc-label {
-    font-size: .75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
-    color: var(--ink-muted); margin-bottom: 8px;
-  }
-  .product-info .desc-text { color: var(--ink-muted); line-height: 1.7; margin-bottom: 28px; }
-
-  .action-row { display: flex; gap: 12px; flex-wrap: wrap; }
-  .action-row .btn { flex: 1; min-width: 140px; }
-
-  .trust-badges { display: flex; gap: 20px; flex-wrap: wrap; margin-top: 28px; }
-  .trust-badge {
-    display: flex; align-items: center; gap: 8px;
-    font-size: .8rem; color: var(--ink-muted);
-  }
-  .trust-badge i { color: var(--accent); }
-
-  @media (max-width: 768px) {
-    .product-layout { grid-template-columns: 1fr; gap: 32px; }
-    .product-image-wrap { position: static; }
-  }
-</style>
-{% endblock %}
-
 {% block content %}
-<div class="page">
+<div class="py-5">
   <div class="container">
 
-    <div class="breadcrumb">
-      <a href="/">Home</a>
-      <i class="fa fa-chevron-right"></i>
-      <a href="/?category={{ product.category.id }}">{{ product.category.name|title }}</a>
-      <i class="fa fa-chevron-right"></i>
-      <span>{{ product.name }}</span>
-    </div>
+    <nav aria-label="breadcrumb" class="mb-5">
+      <ol class="breadcrumb fw-bold small text-uppercase tracking-wide">
+        <li class="breadcrumb-item"><a href="/" class="text-secondary text-decoration-none">Home</a></li>
+        <li class="breadcrumb-item"><a href="/?category={{ product.category.id }}" class="text-secondary text-decoration-none">{{ product.category.name|title }}</a></li>
+        <li class="breadcrumb-item active text-dark" aria-current="page">{{ product.name|truncatechars:30 }}</li>
+      </ol>
+    </nav>
 
-    <div class="product-layout">
+    <div class="row g-5 align-items-start">
 
       <!-- IMAGE -->
-      <div class="product-image-wrap">
-        {% if product.image %}
-          <img src="/media/{{ product.image }}" alt="{{ product.name }}">
-        {% else %}
-          <span class="no-img"><i class="fa fa-image"></i></span>
-        {% endif %}
+      <div class="col-md-6 col-lg-5 sticky-md-top" style="top: 100px;">
+        <div class="bg-light rounded d-flex align-items-center justify-content-center overflow-hidden shadow-sm" style="aspect-ratio: 1;">
+          {% if product.image %}
+            <img src="/media/{{ product.image }}" alt="{{ product.name }}" class="w-100 h-100 object-fit-cover">
+          {% else %}
+            <span class="text-secondary fs-1"><i class="fa fa-image"></i></span>
+          {% endif %}
+        </div>
       </div>
 
       <!-- INFO -->
-      <div class="product-info">
-        <span class="cat-tag">{{ product.category.name }}</span>
-        <h1>{{ product.name }}</h1>
+      <div class="col-md-6 col-lg-7">
+        <div class="text-warning small fw-bold text-uppercase tracking-wide mb-2">{{ product.category.name }}</div>
+        <h1 class="display-5 fw-bold mb-3 text-dark">{{ product.name }}</h1>
 
-        <div class="product-price-big">₹{{ product.price|floatformat:0 }} <span>per item</span></div>
-        <p class="price-note"><i class="fa fa-check-circle"></i> In stock &nbsp;·&nbsp; Free delivery on orders above ₹999</p>
+        <div class="mb-4">
+          <span class="display-4 fw-bold text-dark">₹{{ product.price|floatformat:0 }}</span>
+          <span class="fs-5 text-secondary">per item</span>
+        </div>
+        
+        <p class="small text-secondary mb-5">
+          <i class="fa fa-check-circle text-success me-1"></i> In stock &nbsp;·&nbsp; Free delivery on orders above ₹999
+        </p>
 
-        <hr class="divider-line">
+        <hr class="text-secondary opacity-25 my-4">
 
-        <p class="desc-label">Description</p>
-        <p class="desc-text">{{ product.description }}</p>
+        <p class="small fw-bold text-uppercase tracking-wide text-secondary mb-2">Description</p>
+        <p class="text-secondary lh-lg mb-5">{{ product.description }}</p>
 
-        <div class="action-row">
+        <div class="d-flex gap-3 flex-wrap mb-5">
           {% if user.is_authenticated %}
-            <a href="{% url 'add_to_cart' product.pk %}" class="btn btn-primary">
-              <i class="fa fa-shopping-cart"></i> Add to Cart
+            <a href="{% url 'add_to_cart' product.pk %}" class="btn btn-dark py-3 px-4 fw-bold fs-6 flex-grow-1" style="max-width: 240px;">
+              <i class="fa fa-shopping-cart me-2"></i> Add to Cart
             </a>
-            <a href="{% url 'add_to_wishlist' product.pk %}" class="btn btn-outline">
-              <i class="fa fa-heart"></i> Wishlist
+            <a href="{% url 'add_to_wishlist' product.pk %}" class="btn btn-outline-secondary py-3 px-4 fw-bold fs-6 flex-grow-1" style="max-width: 240px;">
+              <i class="fa fa-heart me-2"></i> Wishlist
             </a>
           {% else %}
-            <a href="{% url 'login' %}" class="btn btn-primary">
-              <i class="fa fa-sign-in-alt"></i> Login to Buy
+            <a href="{% url 'login' %}" class="btn btn-dark py-3 px-4 fw-bold fs-6 flex-grow-1" style="max-width: 240px;">
+              <i class="fa fa-sign-in-alt me-2"></i> Login to Buy
             </a>
           {% endif %}
         </div>
 
-        <div class="trust-badges">
-          <div class="trust-badge"><i class="fa fa-shield-alt"></i> Secure Payment</div>
-          <div class="trust-badge"><i class="fa fa-undo"></i> Easy Returns</div>
-          <div class="trust-badge"><i class="fa fa-truck"></i> Fast Delivery</div>
+        <div class="d-flex gap-4 flex-wrap small text-secondary fw-semibold">
+          <div class="d-flex align-items-center gap-2"><i class="fa fa-shield-alt text-warning fs-5"></i> Secure Payment</div>
+          <div class="d-flex align-items-center gap-2"><i class="fa fa-undo text-warning fs-5"></i> Easy Returns</div>
+          <div class="d-flex align-items-center gap-2"><i class="fa fa-truck text-warning fs-5"></i> Fast Delivery</div>
         </div>
 
       </div>
