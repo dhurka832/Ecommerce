@@ -13,7 +13,6 @@
     {% if items %}
     <div class="row g-5">
 
-      <!-- ITEMS -->
       <div class="col-lg-8">
         <div class="card shadow-sm border-0 mb-4">
           <div class="card-body p-0">
@@ -33,13 +32,11 @@
                 <div class="text-secondary small mb-2">₹{{ item.product.price|floatformat:0 }} each</div>
                 
                 <div class="d-flex align-items-center gap-3 flex-wrap mt-2">
-                  <!-- Hidden form for actual submission -->
                   <form method="POST" action="{% url 'update_cart' item.pk %}" class="d-none" id="form-{{ item.pk }}">
                     {% csrf_token %}
                     <input type="number" name="quantity" value="{{ item.quantity }}" min="0" id="qty-input-{{ item.pk }}">
                   </form>
                   
-                  <!-- +/- Stepper -->
                   <div class="input-group input-group-sm" style="width: 110px;">
                     <button class="btn btn-outline-secondary" type="button" 
                       onclick="changeQty({{ item.pk }}, -1)" 
@@ -70,7 +67,6 @@
         </div>
       </div>
 
-      <!-- SUMMARY -->
       <div class="col-lg-4">
         <div class="card bg-light border-0 shadow-sm sticky-top" style="top: 100px;">
           <div class="card-body p-4">
@@ -137,10 +133,8 @@
     input.value = next;
     minusBtn.disabled = next <= 1;
 
-    // Update line total instantly
     totalEl.textContent = Math.round(unitPrice * next).toLocaleString('en-IN');
 
-    // Debounce: submit 600ms after last click
     clearTimeout(window['timer_' + itemId]);
     window['timer_' + itemId] = setTimeout(() => {
       document.getElementById('form-' + itemId).submit();
