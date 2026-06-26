@@ -118,12 +118,16 @@
   card.on('change', e => {
     document.getElementById('card-errors').textContent = e.error ? e.error.message : '';
   });
-  document.getElementById('payment-form').addEventListener('submit', async e => {
+  
+  const form = document.getElementById('payment-form');
+  form.addEventListener('submit', async e => {
     e.preventDefault();
     const btn = document.getElementById('pay-btn');
     btn.disabled = true; 
     btn.innerHTML = '<i class="fa fa-spinner fa-spin me-2"></i> Processing…';
+    
     const { token, error } = await stripe.createToken(card);
+    
     if (error) {
       document.getElementById('card-errors').textContent = error.message;
       btn.disabled = false; 
@@ -133,8 +137,8 @@
       input.type = 'hidden'; 
       input.name = 'stripeToken'; 
       input.value = token.id;
-      e.target.appendChild(input);
-      e.target.submit();
+      form.appendChild(input);
+      form.submit();
     }
   });
 </script>
