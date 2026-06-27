@@ -2,7 +2,6 @@
 {% block title %}Checkout — LUXE Store{% endblock %}
 
 {% block extra_head %}
-<script src="https://js.stripe.com/v3/"></script>
 {% endblock %}
 
 {% block content %}
@@ -25,23 +24,48 @@
             
             <form id="payment-form" method="POST">
               {% csrf_token %}
-              <div class="mb-4">
-                <label class="form-label fw-bold small text-secondary text-uppercase">Card Information</label>
-                <div id="card-element" class="form-control p-3 bg-light"></div>
-                <div id="card-errors" class="text-danger small mt-2 fw-bold" role="alert"></div>
+
+              {% if messages %}
+              <div class="mb-3">
+                {% for message in messages %}
+                <div class="alert alert-danger py-2">{{ message }}</div>
+                {% endfor %}
               </div>
-              
+              {% endif %}
+
+              <div class="mb-4">
+                <label class="form-label fw-bold small text-secondary text-uppercase">Card Number</label>
+                <input type="text" name="card_number" class="form-control p-3 bg-light" placeholder="4242 4242 4242 4242" maxlength="19" required>
+              </div>
+
+              <div class="row">
+                <div class="col-6 mb-4">
+                  <label class="form-label fw-bold small text-secondary text-uppercase">Expiry Month</label>
+                  <input type="number" name="exp_month" class="form-control p-3 bg-light" placeholder="MM" min="1" max="12" required>
+                </div>
+                <div class="col-6 mb-4">
+                  <label class="form-label fw-bold small text-secondary text-uppercase">Expiry Year</label>
+                  <input type="number" name="exp_year" class="form-control p-3 bg-light" placeholder="YYYY" min="2024" max="2050" required>
+                </div>
+              </div>
+
+              <div class="mb-4">
+                <label class="form-label fw-bold small text-secondary text-uppercase">CVC</label>
+                <input type="text" name="cvc" class="form-control p-3 bg-light" placeholder="123" maxlength="4" required>
+              </div>
+
               <div class="mb-4">
                 <p class="small text-secondary bg-light p-3 rounded border border-secondary-subtle">
                   <i class="fa fa-info-circle text-info me-2"></i>
-                  Test with card: <strong>4242 4242 4242 4242</strong>, any future date, any CVC.
+                  Test cards: <strong>4242 4242 4242 4242</strong> (success) &nbsp;|&nbsp;
+                  <strong>4000 0000 0000 0002</strong> (declined)
                 </p>
               </div>
-              
+
               <button type="submit" id="pay-btn" class="btn btn-dark w-100 py-3 fw-bold fs-5 shadow-sm">
                 <i class="fa fa-lock me-2"></i> Pay ₹{{ total|floatformat:0 }}
               </button>
-              
+
               <div class="text-center mt-3 text-secondary small">
                 <i class="fa fa-shield-alt text-success me-1"></i> Your payment is protected by Stripe 256-bit SSL encryption
               </div>
@@ -72,7 +96,7 @@
                   <div class="fw-bold text-dark text-truncate" style="font-size: 0.95rem;">{{ item.product.name }}</div>
                   <div class="text-secondary small">Qty: {{ item.quantity }}</div>
                 </div>
-                <div class="fw-bold text-dark text-end ms-2" style="font-size: 0.95rem;">₹{{ item.product.price|floatformat:0 }}</div>
+                <div class="fw-bold text-dark text-end ms-2" style="font-size: 0.95rem;">₹{{ item.total_price|floatformat:0 }}</div>
               </div>
               {% endfor %}
             </div>
@@ -101,45 +125,4 @@
   </div>
 </div>
 
-<script>
-  const stripe = Stripe('{{ stripe_key }}');
-  const elements = stripe.elements();
-  const card = elements.create('card', {
-    style: {
-      base: {
-        fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif', 
-        fontSize: '16px',
-        color: '#212529', 
-        '::placeholder': { color: '#6c757d' }
-      }
-    }
-  });
-  card.mount('#card-element');
-  card.on('change', e => {
-    document.getElementById('card-errors').textContent = e.error ? e.error.message : '';
-  });
-  
-  const form = document.getElementById('payment-form');
-  form.addEventListener('submit', async e => {
-    e.preventDefault();
-    const btn = document.getElementById('pay-btn');
-    btn.disabled = true; 
-    btn.innerHTML = '<i class="fa fa-spinner fa-spin me-2"></i> Processing…';
-    
-    const { token, error } = await stripe.createToken(card);
-    
-    if (error) {
-      document.getElementById('card-errors').textContent = error.message;
-      btn.disabled = false; 
-      btn.innerHTML = '<i class="fa fa-lock me-2"></i> Pay ₹{{ total|floatformat:0 }}';
-    } else {
-      const input = document.createElement('input');
-      input.type = 'hidden'; 
-      input.name = 'stripeToken'; 
-      input.value = token.id;
-      form.appendChild(input);
-      form.submit();
-    }
-  });
-</script>
 {% endblock %}

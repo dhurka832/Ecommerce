@@ -1,44 +1,4 @@
-<div align="center">
-  <h1 align="center">LUXE Store — Django E-Commerce</h1>
-  <p align="center">
-    A full-featured Django e-commerce web application with a modern UI.
-    <br />
-    <a href="#features"><strong>Explore the docs »</strong></a>
-    <br />
-    <br />
-    <a href="https://github.com/dhurka832/django-ecommerce-store/issues">Report Bug</a>
-    ·
-    <a href="https://github.com/dhurka832/django-ecommerce-store/issues">Request Feature</a>
-  </p>
-</div>
-
-<!-- BADGES -->
-<div align="center">
-  <img src="https://img.shields.io/badge/Python-3.10+-blue.svg" alt="Python Version">
-  <img src="https://img.shields.io/badge/Django-5.x-green.svg" alt="Django Version">
-  <img src="https://img.shields.io/badge/Stripe-API-blueviolet.svg" alt="Stripe">
-  <img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License">
-</div>
-
-<details>
-  <summary>Table of Contents</summary>
-  <ol>
-    <li><a href="#about-the-project">About The Project</a></li>
-    <li><a href="#features">Features</a></li>
-    <li><a href="#tech-stack">Tech Stack</a></li>
-    <li><a href="#getting-started">Getting Started</a>
-      <ul>
-        <li><a href="#prerequisites">Prerequisites</a></li>
-        <li><a href="#installation">Installation</a></li>
-      </ul>
-    </li>
-    <li><a href="#usage">Usage</a></li>
-    <li><a href="#database-models">Database Models</a></li>
-    <li><a href="#stripe-test-cards">Stripe Test Cards</a></li>
-  </ol>
-</details>
-
-## About The Project
+## Ecommerce - LUXE Store
 
 LUXE Store is a full-featured e-commerce web application built with Django. It features a modern, responsive user interface and provides all essential e-commerce functionalities, from product browsing and cart management to secure payments using Stripe.
 
@@ -48,16 +8,16 @@ LUXE Store is a full-featured e-commerce web application built with Django. It f
 - 🛍️ **Product Catalog:** Browse products, search functionality, and category filtering.
 - 🛒 **Shopping Cart:** Add/remove items and manage quantities seamlessly.
 - ❤️ **Wishlist:** Save favorite products for later.
-- 💳 **Secure Checkout:** Integrated with Stripe API (Test Mode Ready).
+- 💳 **Secure Checkout:** Integrated with Stripe API 
 - 📦 **Order Management:** Track order history and status.
 - 📱 **Responsive UI:** Works beautifully on both desktop and mobile devices, featuring a sticky navbar and toast notifications.
 
 ## Tech Stack
 
 * **Backend:** Django 5.x, Python
-* **Database:** SQLite (Development)
-* **Payments:** Stripe API
-* **Frontend:** HTML5, CSS3, Bootstrap 5 (via crispy-bootstrap5), Font Awesome, Google Fonts
+* **Database:** SQLite 
+* **Payments:** Stripe API 
+* **Frontend:** HTML5, CSS3, Bootstrap 5 , Font Awesome, Google Fonts
 * **Forms:** django-crispy-forms
 
 ## Getting Started
@@ -94,7 +54,6 @@ Follow these instructions to set up the project locally on your machine.
    ```bash
    pip install -r requirements.txt
    ```
-   *(Note: Ensure requirements.txt includes django, python-dotenv, stripe, django-crispy-forms, crispy-bootstrap5, Pillow)*
 
 4. **Configure environment variables**
    Create a `.env` file in the project root directory:
@@ -166,6 +125,16 @@ project/
 | `Order` & `OrderItem` | Completed purchases and order history |
 | `Wishlist` | User's saved items |
 
-## License
+## Screenshots 
 
-Distributed under the MIT License. See `LICENSE` for more information.
+<p align="center">
+  <img src="screenshots/main.jpg" alt="Main View" width="400"/>
+  <img src="screenshots/all-products.jpg" alt="Product List View" width="400"/>
+  <img src="screenshots/wishlist.jpg" alt="Wish List View" width="400"/>
+  <img src="screenshots/cart.jpg" alt="Cart View" width="400"/>
+  <img src="screenshots/checkout.jpg" alt="Checkout View" width="400"/>
+  <img src="screenshots/order-success.jpg" alt="Order Success View" width="400"/>
+  <img src="screenshots/orders.jpg" alt="Orders View" width="400"/>
+  <img src="screenshots/register.jpg" alt="Register View" width="400"/>
+  <img src="screenshots/login.jpg" alt="Login View" width="400"/>
+</p>

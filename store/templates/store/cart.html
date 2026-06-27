@@ -25,37 +25,36 @@
                   <span class="text-secondary fs-4"><i class="fa fa-image"></i></span>
                 {% endif %}
               </div>
-              
+
               <div class="flex-grow-1">
                 <div class="text-warning small fw-bold text-uppercase tracking-wide mb-1">{{ item.product.category.name }}</div>
                 <h5 class="fw-bold mb-1 fs-6">{{ item.product.name }}</h5>
                 <div class="text-secondary small mb-2">₹{{ item.product.price|floatformat:0 }} each</div>
-                
-                <div class="d-flex align-items-center gap-3 flex-wrap mt-2">
-                  <form method="POST" action="{% url 'update_cart' item.pk %}" class="d-none" id="form-{{ item.pk }}">
+
+                <div class="d-flex align-items-center gap-2 mt-2">
+                  <form method="POST" action="{% url 'update_cart' item.pk %}" class="m-0">
                     {% csrf_token %}
-                    <input type="number" name="quantity" value="{{ item.quantity }}" min="0" id="qty-input-{{ item.pk }}">
+                    <input type="hidden" name="quantity" value="{{ item.quantity|add:'-1' }}">
+                    <button class="btn btn-outline-secondary btn-sm" type="submit" {% if item.quantity <= 1 %}disabled{% endif %}>−</button>
                   </form>
-                  
-                  <div class="input-group input-group-sm" style="width: 110px;">
-                    <button class="btn btn-outline-secondary" type="button" 
-                      onclick="changeQty({{ item.pk }}, -1)" 
-                      id="btn-minus-{{ item.pk }}" 
-                      {% if item.quantity <= 1 %}disabled{% endif %}>−</button>
-                    <span class="input-group-text bg-white fw-bold px-3" id="qty-display-{{ item.pk }}">{{ item.quantity }}</span>
-                    <button class="btn btn-outline-secondary" type="button" 
-                      onclick="changeQty({{ item.pk }}, 1)">+</button>
-                  </div>
-                  
-                  <a href="{% url 'remove_from_cart' item.pk %}" class="btn btn-sm btn-outline-danger border-0">
+
+                  <span class="fw-bold px-2">{{ item.quantity }}</span>
+
+                  <form method="POST" action="{% url 'update_cart' item.pk %}" class="m-0">
+                    {% csrf_token %}
+                    <input type="hidden" name="quantity" value="{{ item.quantity|add:'1' }}">
+                    <button class="btn btn-outline-secondary btn-sm" type="submit">+</button>
+                  </form>
+
+                  <a href="{% url 'remove_from_cart' item.pk %}" class="btn btn-sm btn-outline-danger border-0 ms-2">
                     <i class="fa fa-trash"></i> Remove
                   </a>
                 </div>
               </div>
-              
-              <div class="text-end ms-auto" id="price-{{ item.pk }}">
-                <div class="fw-bold fs-5 text-dark">₹<span id="total-{{ item.pk }}">{{ item.product.price|floatformat:0 }}</span></div>
-                <div class="text-secondary small" data-unit="{{ item.product.price }}">₹{{ item.product.price|floatformat:0 }} each</div>
+
+              <div class="text-end ms-auto">
+                <div class="fw-bold fs-5 text-dark">₹<span>{{ item.total_price|floatformat:0 }}</span></div>
+                <div class="text-secondary small">₹{{ item.product.price|floatformat:0 }} each</div>
               </div>
             </div>
             {% endfor %}
@@ -115,30 +114,4 @@
 
   </div>
 </div>
-
-<script>
-  function changeQty(itemId, delta) {
-    const display  = document.getElementById('qty-display-' + itemId);
-    const input    = document.getElementById('qty-input-' + itemId);
-    const minusBtn = document.getElementById('btn-minus-' + itemId);
-    const totalEl  = document.getElementById('total-' + itemId);
-    const unitPrice = parseFloat(
-      document.querySelector('#price-' + itemId + ' div[data-unit]').dataset.unit
-    );
-
-    let next = parseInt(display.textContent) + delta;
-    if (next < 1) return;
-
-    display.textContent = next;
-    input.value = next;
-    minusBtn.disabled = next <= 1;
-
-    totalEl.textContent = Math.round(unitPrice * next).toLocaleString('en-IN');
-
-    clearTimeout(window['timer_' + itemId]);
-    window['timer_' + itemId] = setTimeout(() => {
-      document.getElementById('form-' + itemId).submit();
-    }, 600);
-  }
-</script>
 {% endblock %}

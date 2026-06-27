@@ -84,20 +84,30 @@ def checkout(request):
     items = CartItem.objects.filter(cart=cart_obj)
     total = sum(i.product.price * i.quantity for i in items)
     stripe.api_key = settings.STRIPE_SECRET_KEY
+
     if request.method == 'POST':
-        token = request.POST.get('stripeToken')
-        try:
-            stripe.Charge.create(amount=int(total * 100), currency='inr', source=token)
-            order = Order.objects.create(user=request.user, total_price=total, status='Paid')
-            for item in items:
-                OrderItem.objects.create(order=order, product=item.product, quantity=item.quantity)
-            items.delete()
-            return redirect('order_success')
-        except stripe.error.StripeError as e:
-            messages.error(request, str(e))
+        card_number = request.POST.get('card_number', '').replace(' ', '')
+        TEST_CARD_TOKENS = {
+            '4242424242424242': 'tok_visa',               # Success
+            '4000000000000002': 'tok_chargeDeclined',      # Declined
+            '4000000000009995': 'tok_chargeDeclinedInsufficientFunds',  # Insufficient funds
+        }
+        token = TEST_CARD_TOKENS.get(card_number)
+        if not token:
+            messages.error(request, 'Invalid test card number. Please use one of the test cards shown below.')
+        else:
+            try:
+                stripe.Charge.create(amount=int(total * 100), currency='inr', source=token)
+                order = Order.objects.create(user=request.user, total_price=total, status='Paid')
+                for item in items:
+                    OrderItem.objects.create(order=order, product=item.product, quantity=item.quantity)
+                items.delete()
+                return redirect('order_success')
+            except stripe.error.StripeError as e:
+                messages.error(request, str(e))
+
     return render(request, 'store/checkout.html', {
         'items': items, 'total': total,
-        'stripe_key': settings.STRIPE_PUBLISHABLE_KEY
     })
 
 @login_required
@@ -118,4 +128,8 @@ def register(request):
             return redirect('home')
     else:
         form = UserCreationForm()
+        
+    for field in form.fields.values():
+        field.widget.attrs['class'] = 'form-control bg-light p-3'
+        
     return render(request, 'store/register.html', {'form': form})
