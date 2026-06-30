@@ -2,10 +2,12 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 
-load_dotenv(BASEDIR / '.env')
-
 BASE_DIR = Path(__file__).resolve().parent.parent
-# SECRET_KEY = 'django-insecure-modern-ui-key-for-demo'
+
+load_dotenv(BASE_DIR / ".env")
+
+SECRET_KEY = 'django-insecure-modern-ui-key-for-demo'
+
 DEBUG = True
 ALLOWED_HOSTS = ['*']
 
@@ -67,5 +69,11 @@ LOGOUT_REDIRECT_URL = '/'
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 
-STRIPE_SECRET_KEY = os.getenv('STRIPE_SECRET_KEY', '')
-STRIPE_PUBLISHABLE_KEY = os.getenv('STRIPE_PUBLISHABLE_KEY', '')
+STRIPE_SECRET_KEY = os.getenv('STRIPE_SECRET_KEY','')
+STRIPE_PUBLISHABLE_KEY = os.getenv('STRIPE_PUBLISHABLE_KEY','')
+
+if not STRIPE_SECRET_KEY:
+    raise ValueError("STRIPE_SECRET_KEY is not set!")
+
+if not STRIPE_PUBLISHABLE_KEY:
+    raise ValueError("STRIPE_PUBLISHABLE_KEY is not set!")
