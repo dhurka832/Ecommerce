@@ -2,10 +2,10 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 
-load_dotenv()
+load_dotenv(BASEDIR / '.env')
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-SECRET_KEY = 'django-insecure-modern-ui-key-for-demo'
+# SECRET_KEY = 'django-insecure-modern-ui-key-for-demo'
 DEBUG = True
 ALLOWED_HOSTS = ['*']
 
