@@ -4,13 +4,13 @@ LUXE Store is a full-featured e-commerce web application built with Django. It f
 
 ### Features
 
-- 🔐 **User Authentication:** Registration, login, and secure user sessions.
-- 🛍️ **Product Catalog:** Browse products, search functionality, and category filtering.
-- 🛒 **Shopping Cart:** Add/remove items and manage quantities seamlessly.
-- ❤️ **Wishlist:** Save favorite products for later.
-- 💳 **Secure Checkout:** Integrated with Stripe API 
-- 📦 **Order Management:** Track order history and status.
-- 📱 **Responsive UI:** Works beautifully on both desktop and mobile devices, featuring a sticky navbar and toast notifications.
+- **User Authentication:** Registration, login, and secure user sessions.
+- **Product Catalog:** Browse products, search functionality, and category filtering.
+- **Shopping Cart:** Add/remove items and manage quantities seamlessly.
+- **Wishlist:** Save favorite products for later.
+- **Secure Checkout:** Integrated with Stripe API 
+- **Order Management:** Track order history and status.
+- **Responsive UI:** Works beautifully on both desktop and mobile devices, featuring a sticky navbar and toast notifications.
 
 ## Tech Stack
 
