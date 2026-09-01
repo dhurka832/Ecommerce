@@ -20,17 +20,7 @@ LUXE Store is a full-featured e-commerce web application built with Django. It f
 * **Frontend:** HTML5, CSS3, Bootstrap 5 , Font Awesome, Google Fonts
 * **Forms:** django-crispy-forms
 
-## Getting Started
-
-Follow these instructions to set up the project locally on your machine.
-
-### Prerequisites
-
-* Python 3.10 or higher
-* pip (Python package installer)
-* Git
-
-### Installation
+## Installation
 
 1. **Clone the repository**
    ```bash
@@ -80,15 +70,6 @@ Follow these instructions to set up the project locally on your machine.
    ```
    Visit `http://localhost:8000` in your browser.
 
-## Usage
-
-1. Register a new account at `/register/` or login via `/login/`.
-2. Browse products, use the search bar, or filter by category on the home page.
-3. View product details, and add items to your cart or wishlist.
-4. Proceed to checkout via the cart page.
-5. Enter a test Stripe card to complete the purchase.
-6. Access your order history in your profile or access the Django admin panel at `/admin/` to manage the store.
-
 ## Stripe Test Cards
 
 Use the following test cards in the Stripe checkout form (use any future expiry date and any 3-digit CVC):
@@ -107,23 +88,13 @@ project/
 ├── db.sqlite3
 ├── .env
 ├── requirements.txt
-├── ecommerce/            # Main project configuration
-└── store/                # E-commerce application
-    ├── models.py         # Database schema
-    ├── views.py          # Request handling
-    ├── urls.py           # App routing
-    └── templates/store/  # HTML templates
+├── ecommerce/           
+└── store/                
+    ├── models.py        
+    ├── views.py         
+    ├── urls.py          
+    └── templates/store/  
 ```
-
-## Database Models
-
-| Model | Description |
-| :--- | :--- |
-| `Category` | Product categorization |
-| `Product` | Product details, pricing, and images |
-| `Cart` & `CartItem` | User shopping sessions and items |
-| `Order` & `OrderItem` | Completed purchases and order history |
-| `Wishlist` | User's saved items |
 
 ## Screenshots 
 
