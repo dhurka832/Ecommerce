@@ -1,28 +1,35 @@
-## Ecommerce - LUXE Store
+## Ecommerce - LUXE Store (with AI Customer Support Chatbot)
 
-LUXE Store is a full-featured e-commerce web application built with Django. It features a modern, responsive user interface and provides all essential e-commerce functionalities, from product browsing and cart management to secure payments using Stripe.
+LUXE Store is a full-featured e-commerce web application built with **Django 5.x** and enhanced with an interactive **AI Customer Support Assistant Chatbot**. It provides instant FAQ resolution, product inquiries, user authentication, cart & wishlist management, order tracking, and secure payments via Stripe.
+
+---
 
 ### Features
 
-- 🔐 **User Authentication:** Registration, login, and secure user sessions.
-- 🛍️ **Product Catalog:** Browse products, search functionality, and category filtering.
-- 🛒 **Shopping Cart:** Add/remove items and manage quantities seamlessly.
-- ❤️ **Wishlist:** Save favorite products for later.
-- 💳 **Secure Checkout:** Integrated with Stripe API 
-- 📦 **Order Management:** Track order history and status.
-- 📱 **Responsive UI:** Works beautifully on both desktop and mobile devices, featuring a sticky navbar and toast notifications.
+- 💬 **AI Customer Support Chatbot:** Instant assistance for return/refund policies, shipping timeframes, payment methods, order tracking, store information, and product recommendations.
+- 🔐 **User Authentication:** Registration, login, and secure user session management.
+- 🛍️ **Product Catalog:** Interactive catalog with keyword search and category filtering.
+- 🛒 **Shopping Cart:** Add/remove products and manage item quantities seamlessly.
+- ❤️ **Wishlist:** Save favorite items to a personalized wishlist.
+- 💳 **Secure Checkout:** Full integration with the Stripe Payment API.
+- 📦 **Order Management:** Track past orders, order status, and purchase history.
+- 📱 **Modern UI & Micro-Animations:** Responsive interface built with Bootstrap 5, custom CSS transitions, and smooth hover effects.
+
+---
 
 ## Tech Stack
 
-* **Backend:** Django 5.x, Python
-* **Database:** SQLite 
-* **Payments:** Stripe API 
-* **Frontend:** HTML5, CSS3, Bootstrap 5 , Font Awesome, Google Fonts
+* **Backend:** Django 5.x, Python 3.10+
+* **Database:** SQLite
+* **Payments:** Stripe API
+* **Frontend:** HTML5, CSS3, Vanilla JavaScript, Bootstrap 5, Font Awesome
 * **Forms:** django-crispy-forms
+
+---
 
 ## Getting Started
 
-Follow these instructions to set up the project locally on your machine.
+Follow these instructions to set up the project locally.
 
 ### Prerequisites
 
@@ -39,15 +46,15 @@ Follow these instructions to set up the project locally on your machine.
    ```
 
 2. **Create and activate a virtual environment**
-   * Windows:
+   * **Windows**:
      ```bash
-     python -m venv env
-     env\Scripts\activate
+     python -m venv venv
+     venv\Scripts\activate
      ```
-   * macOS / Linux:
+   * **macOS / Linux**:
      ```bash
-     python3 -m venv env
-     source env/bin/activate
+     python3 -m venv venv
+     source venv/bin/activate
      ```
 
 3. **Install dependencies**
@@ -56,14 +63,13 @@ Follow these instructions to set up the project locally on your machine.
    ```
 
 4. **Configure environment variables**
-   Create a `.env` file in the project root directory:
+   Create a `.env` file in the project root:
    ```env
    STRIPE_SECRET_KEY=sk_test_your_key_here
    STRIPE_PUBLISHABLE_KEY=pk_test_your_key_here
    ```
-   > Get your test keys from the [Stripe Dashboard](https://dashboard.stripe.com/test/apikeys).
 
-5. **Run migrations**
+5. **Run database migrations**
    ```bash
    python manage.py makemigrations
    python manage.py migrate
@@ -80,24 +86,7 @@ Follow these instructions to set up the project locally on your machine.
    ```
    Visit `http://localhost:8000` in your browser.
 
-## Usage
-
-1. Register a new account at `/register/` or login via `/login/`.
-2. Browse products, use the search bar, or filter by category on the home page.
-3. View product details, and add items to your cart or wishlist.
-4. Proceed to checkout via the cart page.
-5. Enter a test Stripe card to complete the purchase.
-6. Access your order history in your profile or access the Django admin panel at `/admin/` to manage the store.
-
-## Stripe Test Cards
-
-Use the following test cards in the Stripe checkout form (use any future expiry date and any 3-digit CVC):
-
-| Scenario | Card Number |
-| :--- | :--- |
-| **Payment succeeds** | `4242 4242 4242 4242` |
-| **Payment declined** | `4000 0000 0000 0002` |
-| **Requires authentication** | `4000 0025 0000 3155` |
+---
 
 ## Project Structure
 
@@ -107,23 +96,28 @@ project/
 ├── db.sqlite3
 ├── .env
 ├── requirements.txt
-├── ecommerce/            # Main project configuration
+├── ecommerce/            # Main project configuration (settings, urls)
 └── store/                # E-commerce application
-    ├── models.py         # Database schema
-    ├── views.py          # Request handling
+    ├── models.py         # Database schema (Product, Order, Cart, etc.)
+    ├── views.py          # Request handlers & Chatbot API endpoint
     ├── urls.py           # App routing
+    ├── static/           # CSS animations & Chatbot JavaScript
     └── templates/store/  # HTML templates
 ```
+
+---
 
 ## Database Models
 
 | Model | Description |
 | :--- | :--- |
 | `Category` | Product categorization |
-| `Product` | Product details, pricing, and images |
+| `Product` | Product details, pricing, descriptions, and media |
 | `Cart` & `CartItem` | User shopping sessions and items |
 | `Order` & `OrderItem` | Completed purchases and order history |
-| `Wishlist` | User's saved items |
+| `Wishlist` | User's saved favorite items |
+
+---
 
 ## Screenshots 
 

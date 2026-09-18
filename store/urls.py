@@ -15,7 +15,11 @@ urlpatterns = [
     path('checkout/', views.checkout, name='checkout'),
     path('order-success/', views.order_success, name='order_success'),
     path('orders/', views.order_history, name='order_history'),
+    path('api/chatbot/', views.chatbot_api, name='chatbot_api'),
     path('register/', views.register, name='register'),
     path('login/', auth_views.LoginView.as_view(template_name='store/login.html'), name='login'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
 ]
+
+
+

@@ -71,9 +71,11 @@ CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 STRIPE_SECRET_KEY = os.getenv('STRIPE_SECRET_KEY','')
 STRIPE_PUBLISHABLE_KEY = os.getenv('STRIPE_PUBLISHABLE_KEY','')
+GEMINI_API_KEY = os.getenv('GEMINI_API_KEY', '')
 
 if not STRIPE_SECRET_KEY:
     raise ValueError("STRIPE_SECRET_KEY is not set!")
 
 if not STRIPE_PUBLISHABLE_KEY:
     raise ValueError("STRIPE_PUBLISHABLE_KEY is not set!")
+
