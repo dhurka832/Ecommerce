@@ -51,6 +51,7 @@
               </button>
             </form>
           </li>
+
         {% else %}
           <li class="nav-item">
             <a class="nav-link text-secondary fw-semibold px-3 py-2 rounded-pill" href="{% url 'login' %}"><i class="fa fa-sign-in-alt me-1"></i> Login</a>
@@ -97,54 +98,50 @@
   </div>
 </footer>
 
-<!-- Floating FAB Button for Customer Assistant -->
 <button class="chatbot-fab-btn" id="chatbotToggleBtn" title="LUXE Customer Support Assistant">
   <i class="fa fa-headset"></i>
 </button>
 
-<!-- Customer Support Chatbot Window -->
 <div class="chatbot-container d-none" id="chatbotWindow">
-  <!-- Header -->
   <div class="chatbot-header">
     <div class="d-flex align-items-center gap-2">
       <div class="chatbot-avatar"><i class="fa fa-robot"></i></div>
-      <div>
-        <div class="fw-bold fs-6 text-white leading-tight">Customer Assistant</div>
-        <small class="text-warning d-flex align-items-center gap-1" style="font-size: 0.72rem;">
-          <span class="bg-warning rounded-circle d-inline-block" style="width:6px; height:6px;"></span> Online Support
-        </small>
+        <div>
+          <div class="fw-bold fs-6 text-white leading-tight">Customer Assistant</div>
+            <small class="text-warning d-flex align-items-center gap-1" style="font-size: 0.72rem;">
+              <span class="bg-warning rounded-circle d-inline-block" style="width:6px; height:6px;"></span> Online Support
+            </small>
+          </div>
+        </div>
+        <button type="button" class="btn-close btn-close-white small" id="chatbotCloseBtn" aria-label="Close"></button>
+      </div>
+
+      <div class="chatbot-body" id="chatbotBody">
+        <div class="chatbot-msg chatbot-msg-bot">
+          <div class="chatbot-bubble">
+           👋 Hello! I am your <strong>LUXE Customer Assistant</strong>.<br>
+            How can I help you today? Choose a quick option below or ask me any question!
+          </div>
+        </div>
+      </div>
+
+      <div class="chatbot-chips">
+        <button type="button" class="chatbot-chip" data-msg="Shipping and Delivery info">🚚 Delivery</button>
+        <button type="button" class="chatbot-chip" data-msg="Payment options and Stripe">💳 Payment</button>
+        <button type="button" class="chatbot-chip" data-msg="Return and Refund policy">🔄 Returns</button>
+        <button type="button" class="chatbot-chip" data-msg="Track my order history">📦 Orders</button>
+      </div>
+
+      <div class="chatbot-footer">
+        <form id="chatbotForm" class="d-flex gap-2">
+          {% csrf_token %}
+          <input type="text" id="chatbotInput" class="form-control form-control-sm rounded-pill border px-3 shadow-none" placeholder="Type your question..." autocomplete="off">
+          <button type="submit" id="chatbotSendBtn" class="btn btn-warning btn-sm rounded-circle text-white px-3 d-flex align-items-center justify-content-center">
+            <i class="fa fa-paper-plane" style="font-size: 0.8rem;"></i>
+          </button>
+        </form>
       </div>
     </div>
-    <button type="button" class="btn-close btn-close-white small" id="chatbotCloseBtn" aria-label="Close"></button>
-  </div>
-
-  <!-- Messages Body -->
-  <div class="chatbot-body" id="chatbotBody">
-    <div class="chatbot-msg chatbot-msg-bot">
-      <div class="chatbot-bubble">
-        👋 Hello! I am your <strong>LUXE Customer Assistant</strong>.<br>
-        How can I help you today? Choose a quick option below or ask me any question!
-      </div>
-    </div>
-  </div>
-
-  <!-- Quick Action Chips -->
-  <div class="chatbot-chips">
-    <button type="button" class="chatbot-chip" data-msg="Shipping and Delivery info">🚚 Delivery</button>
-    <button type="button" class="chatbot-chip" data-msg="Payment options and Stripe">💳 Payment</button>
-    <button type="button" class="chatbot-chip" data-msg="Return and Refund policy">🔄 Returns</button>
-    <button type="button" class="chatbot-chip" data-msg="Track my order history">📦 Orders</button>
-  </div>
-
-  <!-- Input Footer -->
-  <div class="chatbot-footer">
-    <form id="chatbotForm" class="d-flex gap-2">
-      {% csrf_token %}
-      <input type="text" id="chatbotInput" class="form-control form-control-sm rounded-pill border px-3 shadow-none" placeholder="Type your question..." autocomplete="off">
-      <button type="submit" id="chatbotSendBtn" class="btn btn-warning btn-sm rounded-circle text-white px-3 d-flex align-items-center justify-content-center">
-        <i class="fa fa-paper-plane" style="font-size: 0.8rem;"></i>
-      </button>
-    </form>
   </div>
 </div>
 

@@ -129,6 +129,7 @@ project/
   <img src="screenshots/checkout.jpg" alt="Checkout View" width="400"/>
   <img src="screenshots/order-success.jpg" alt="Order Success View" width="400"/>
   <img src="screenshots/orders.jpg" alt="Orders View" width="400"/>
+  <img src="screenshots/customer-assistant.jpg" alt="Customer Assistant View" width="400"/>
   <img src="screenshots/register.jpg" alt="Register View" width="400"/>
   <img src="screenshots/login.jpg" alt="Login View" width="400"/>
 </p>
