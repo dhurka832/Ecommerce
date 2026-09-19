@@ -22,33 +22,26 @@ def chatbot_api(request):
         if not msg:
             return JsonResponse({'reply': 'Hello! How can I assist you with your LUXE Store shopping today?'})
 
-        # 1. Return & Refund Policy FAQs
         if 'return' in msg or 'refund' in msg or 'exchange' in msg or 'policy' in msg and 'return' in msg:
             reply = "🤖 You can return eligible products within 7 days of delivery for a full refund or exchange. Items must be unused and in original packaging."
 
-        # 2. Shipping & Delivery Information FAQs
         elif 'shipping' in msg or 'delivery' in msg or 'dispatch' in msg or 'ship' in msg:
             reply = "🚚 We offer free standard shipping on all orders above ₹999! Standard delivery arrives within 2 to 4 business days."
 
-        # 3. Store Information FAQs
         elif 'store' in msg or 'about' in msg or 'location' in msg or 'contact' in msg or 'hours' in msg or 'who are you' in msg:
             reply = "🏪 **LUXE Store** is a premier online shopping platform offering curated fashion, accessories, and electronics with 24/7 customer service."
 
-        # 4. Payment-Related FAQs
         elif 'payment' in msg or 'pay' in msg or 'card' in msg or 'stripe' in msg or 'credit' in msg or 'debit' in msg:
             reply = "💳 We support all major Credit and Debit cards processed securely through Stripe API. All transactions are 100% encrypted."
 
-        # 5. Order-Related FAQs
         elif 'order' in msg or 'track' in msg or 'history' in msg or 'status' in msg:
             reply = "📦 You can view and track your order status anytime by clicking the 'Orders' link in the top navigation bar."
 
-        # 6. Product-Related Questions & Recommendations
         elif 'product' in msg or 'item' in msg or 'catalog' in msg or 'stock' in msg or 'price' in msg:
             products = Product.objects.all()[:4]
             names = ", ".join([f"{p.name} (₹{p.price:.0f})" for p in products])
             reply = f"🛍️ Explore our featured products: {names}. Use the top search bar or category filters to browse!"
 
-        # General Catalog Search Matching
         else:
             matching = Product.objects.filter(name__icontains=msg)[:3]
             if matching.exists():
@@ -63,9 +56,6 @@ def chatbot_api(request):
 
 
 def home(request):
-
-
-
     query = request.GET.get('q', '')
     category_id = request.GET.get('category', '')
     products = Product.objects.all()
