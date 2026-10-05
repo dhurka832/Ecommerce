@@ -4,151 +4,200 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{% block title %}LUXE Store{% endblock %}</title>
+  <title>{% block title %}LUXE — Curated Luxury & Lifestyle{% endblock %}</title>
   
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome 6 -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <link rel="stylesheet" href="{% static 'store/css/animations.css' %}">
+  
+  <!-- Custom Luxe Design System (Pure CSS - No Bootstrap) -->
+  <link rel="stylesheet" href="{% static 'store/css/main.css' %}">
   
   {% block extra_head %}{% endblock %}
 </head>
-<body class="bg-light d-flex flex-column min-vh-100">
+<body>
 
-<nav class="navbar navbar-expand-lg navbar-light navbar-luxe border-bottom sticky-top shadow-sm">
-  <div class="container-fluid px-4">
-    <a class="navbar-brand fw-bold fs-4" href="/">LUXE<span class="text-warning">.</span></a>
-    
-    <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
+  <!-- Top Sticky Navigation Bar -->
+  <header class="luxe-header">
+    <div class="luxe-container">
+      <div class="luxe-nav-wrapper">
+        
+        <!-- Brand Logo -->
+        <a href="/" class="luxe-brand">
+          <span>LUXE</span>
+          <span class="luxe-brand-dot"></span>
+          <span class="luxe-brand-badge">STUDIO</span>
+        </a>
 
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <div class="d-flex mx-auto w-100 mt-3 mt-lg-0 align-items-center gap-2" style="max-width: 480px;">
-        <form class="d-flex w-100 m-0" method="GET" action="/">
-          <div class="input-group shadow-sm rounded-pill overflow-hidden border">
-            <input class="form-control border-0 px-3 bg-white shadow-none" type="search" name="q" placeholder="Search products…" value="{{ request.GET.q }}">
-            <button class="btn btn-warning text-white fw-bold px-4 shadow-none" type="submit"><i class="fa fa-search"></i></button>
+        <!-- Search Input Card -->
+        <form class="luxe-search-form" method="GET" action="/">
+          <div class="luxe-search-box">
+            <i class="fa fa-search luxe-search-icon"></i>
+            <input type="search" name="q" class="luxe-search-input" placeholder="Search curated luxury pieces..." value="{{ request.GET.q }}">
+            <button type="submit" class="luxe-search-btn">
+              <span>Find</span>
+            </button>
           </div>
         </form>
-      </div>
 
-      <ul class="navbar-nav ms-auto align-items-center mt-3 mt-lg-0 gap-2">
-        {% if user.is_authenticated %}
-          <li class="nav-item">
-            <a class="nav-link text-secondary fw-semibold px-3 py-2 rounded-pill" href="{% url 'wishlist' %}"><i class="fa fa-heart me-1 text-danger"></i> Wishlist</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link text-secondary fw-semibold px-3 py-2 rounded-pill" href="{% url 'cart' %}"><i class="fa fa-shopping-bag me-1 text-warning"></i> Cart</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link text-secondary fw-semibold px-3 py-2 rounded-pill" href="{% url 'order_history' %}"><i class="fa fa-box me-1 text-info"></i> Orders</a>
-          </li>
-          <li class="nav-item">
-            <form method="POST" action="{% url 'logout' %}" class="m-0">
+        <!-- Navigation Actions -->
+        <nav class="luxe-nav-actions">
+          {% if user.is_authenticated %}
+            <a href="{% url 'wishlist' %}" class="luxe-nav-link" title="Your Wishlist">
+              <i class="fa-regular fa-heart"></i>
+              <span>Saved</span>
+            </a>
+            <a href="{% url 'cart' %}" class="luxe-nav-link" title="Shopping Cart">
+              <i class="fa fa-bag-shopping"></i>
+              <span>Bag</span>
+            </a>
+            <a href="{% url 'order_history' %}" class="luxe-nav-link" title="Order History">
+              <i class="fa fa-box"></i>
+              <span>Orders</span>
+            </a>
+            <form method="POST" action="{% url 'logout' %}" style="margin: 0;">
               {% csrf_token %}
-              <button type="submit" class="btn btn-dark fw-semibold rounded-pill px-3 py-2 ms-lg-2">
-                <i class="fa fa-sign-out-alt me-1"></i> Logout
+              <button type="submit" class="luxe-btn-primary" style="padding: 8px 16px;">
+                <i class="fa fa-arrow-right-from-bracket"></i>
+                <span>Logout</span>
               </button>
             </form>
-          </li>
+          {% else %}
+            <a href="{% url 'login' %}" class="luxe-nav-link">
+              <i class="fa fa-arrow-right-to-bracket"></i>
+              <span>Sign In</span>
+            </a>
+            <a href="{% url 'register' %}" class="luxe-btn-primary">
+              <span>Create Account</span>
+            </a>
+          {% endif %}
+        </nav>
 
-        {% else %}
-          <li class="nav-item">
-            <a class="nav-link text-secondary fw-semibold px-3 py-2 rounded-pill" href="{% url 'login' %}"><i class="fa fa-sign-in-alt me-1"></i> Login</a>
-          </li>
-          <li class="nav-item">
-            <a class="btn btn-dark fw-semibold rounded-pill px-4 py-2 ms-lg-2" href="{% url 'register' %}">Sign Up</a>
-          </li>
-        {% endif %}
-      </ul>
-    </div>
-  </div>
-</nav>
+        <!-- Mobile Menu Toggle Button -->
+        <button class="luxe-mobile-toggle" id="mobileMenuToggle" aria-label="Toggle navigation menu">
+          <i class="fa fa-bars"></i>
+        </button>
 
-{% if messages %}
-<div class="position-fixed top-0 end-0 p-3" style="z-index: 1050; margin-top: 70px;">
-  {% for message in messages %}
-  <div class="alert alert-{% if message.tags == 'error' %}danger{% elif message.tags == 'success' %}success{% else %}info{% endif %} alert-dismissible fade show shadow-sm border-0" role="alert">
-    {{ message }}
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-  </div>
-  {% endfor %}
-</div>
-{% endif %}
-
-<main class="flex-grow-1">
-  {% block content %}{% endblock %}
-</main>
-
-<footer class="bg-white border-top py-4 mt-auto">
-  <div class="container-fluid px-4">
-    <div class="row align-items-center">
-      <div class="col-md-4 text-center text-md-start mb-3 mb-md-0">
-        <span class="fs-5 fw-bold">LUXE<span class="text-warning">.</span></span>
-      </div>
-      <div class="col-md-4 text-center text-secondary mb-3 mb-md-0 small">
-        © 2026 LUXE Store. All rights reserved.
-      </div>
-      <div class="col-md-4 text-center text-md-end">
-        <a href="/" class="text-secondary text-decoration-none me-3 small">Shop</a>
-        <a href="{% url 'cart' %}" class="text-secondary text-decoration-none me-3 small">Cart</a>
-        <a href="{% url 'order_history' %}" class="text-secondary text-decoration-none small">Orders</a>
       </div>
     </div>
-  </div>
-</footer>
 
-<button class="chatbot-fab-btn" id="chatbotToggleBtn" title="LUXE Customer Support Assistant">
-  <i class="fa fa-headset"></i>
-</button>
-
-<div class="chatbot-container d-none" id="chatbotWindow">
-  <div class="chatbot-header">
-    <div class="d-flex align-items-center gap-2">
-      <div class="chatbot-avatar"><i class="fa fa-robot"></i></div>
-        <div>
-          <div class="fw-bold fs-6 text-white leading-tight">Customer Assistant</div>
-            <small class="text-warning d-flex align-items-center gap-1" style="font-size: 0.72rem;">
-              <span class="bg-warning rounded-circle d-inline-block" style="width:6px; height:6px;"></span> Online Support
-            </small>
-          </div>
+    <!-- Mobile Drawer Menu -->
+    <div class="luxe-mobile-menu" id="mobileMenu">
+      <form method="GET" action="/" style="margin-bottom: 0.5rem;">
+        <div class="luxe-search-box">
+          <i class="fa fa-search luxe-search-icon"></i>
+          <input type="search" name="q" class="luxe-search-input" placeholder="Search catalog..." value="{{ request.GET.q }}">
+          <button type="submit" class="luxe-search-btn">Find</button>
         </div>
-        <button type="button" class="btn-close btn-close-white small" id="chatbotCloseBtn" aria-label="Close"></button>
-      </div>
-
-      <div class="chatbot-body" id="chatbotBody">
-        <div class="chatbot-msg chatbot-msg-bot">
-          <div class="chatbot-bubble">
-           👋 Hello! I am your <strong>LUXE Customer Assistant</strong>.<br>
-            How can I help you today? Choose a quick option below or ask me any question!
-          </div>
-        </div>
-      </div>
-
-      <div class="chatbot-chips">
-        <button type="button" class="chatbot-chip" data-msg="Shipping and Delivery info">🚚 Delivery</button>
-        <button type="button" class="chatbot-chip" data-msg="Payment options and Stripe">💳 Payment</button>
-        <button type="button" class="chatbot-chip" data-msg="Return and Refund policy">🔄 Returns</button>
-        <button type="button" class="chatbot-chip" data-msg="Track my order history">📦 Orders</button>
-      </div>
-
-      <div class="chatbot-footer">
-        <form id="chatbotForm" class="d-flex gap-2">
+      </form>
+      
+      {% if user.is_authenticated %}
+        <a href="{% url 'wishlist' %}" class="luxe-nav-link"><i class="fa-regular fa-heart"></i> Wishlist</a>
+        <a href="{% url 'cart' %}" class="luxe-nav-link"><i class="fa fa-bag-shopping"></i> Shopping Bag</a>
+        <a href="{% url 'order_history' %}" class="luxe-nav-link"><i class="fa fa-box"></i> Order History</a>
+        <form method="POST" action="{% url 'logout' %}">
           {% csrf_token %}
-          <input type="text" id="chatbotInput" class="form-control form-control-sm rounded-pill border px-3 shadow-none" placeholder="Type your question..." autocomplete="off">
-          <button type="submit" id="chatbotSendBtn" class="btn btn-warning btn-sm rounded-circle text-white px-3 d-flex align-items-center justify-content-center">
-            <i class="fa fa-paper-plane" style="font-size: 0.8rem;"></i>
-          </button>
+          <button type="submit" class="luxe-btn-primary" style="width: 100%;">Logout</button>
         </form>
+      {% else %}
+        <a href="{% url 'login' %}" class="luxe-nav-link"><i class="fa fa-arrow-right-to-bracket"></i> Sign In</a>
+        <a href="{% url 'register' %}" class="luxe-btn-primary" style="text-align: center;">Create Account</a>
+      {% endif %}
+    </div>
+  </header>
+
+  <!-- Floating Toast Message Alerts -->
+  {% if messages %}
+  <div class="luxe-toast-container">
+    {% for message in messages %}
+    <div class="luxe-toast">
+      {% if message.tags == 'error' %}
+        <i class="fa-solid fa-circle-exclamation toast-icon-error"></i>
+      {% else %}
+        <i class="fa-solid fa-circle-check toast-icon-success"></i>
+      {% endif %}
+      <div class="toast-message">{{ message }}</div>
+      <button type="button" class="toast-close-btn" aria-label="Dismiss alert"><i class="fa fa-times"></i></button>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- Main Content Body -->
+  <main class="main-content">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- Luxury Footer -->
+  <footer class="luxe-footer">
+    <div class="luxe-container">
+      <div class="footer-content">
+        <div>
+          <div class="footer-brand">LUXE<span class="luxe-brand-dot"></span></div>
+          <div class="footer-copy">Crafted for discerning collectors & shoppers worldwide.</div>
+        </div>
+        <div class="footer-links">
+          <a href="/" class="footer-link">Catalog</a>
+          <a href="{% url 'cart' %}" class="footer-link">Shopping Bag</a>
+          <a href="{% url 'wishlist' %}" class="footer-link">Wishlist</a>
+          <a href="{% url 'order_history' %}" class="footer-link">Order Status</a>
+        </div>
+        <div class="footer-copy">
+          © 2026 LUXE Studio Inc. All rights reserved.
+        </div>
       </div>
     </div>
-  </div>
-</div>
+  </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script src="{% static 'store/js/chatbot.js' %}"></script>
+  <!-- Floating Concierge Chatbot Button & Card Modal -->
+  <button class="chatbot-fab-btn" id="chatbotToggleBtn" title="LUXE Private Concierge">
+    <span class="chatbot-fab-pulse"></span>
+    <i class="fa-solid fa-headset"></i>
+  </button>
+
+  <div class="chatbot-window-card hidden" id="chatbotWindow">
+    <div class="chatbot-header">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <div class="chatbot-avatar"><i class="fa-solid fa-sparkles"></i></div>
+        <div>
+          <div style="font-weight: 700; font-size: 0.95rem; color: #fff;">LUXE Concierge</div>
+          <div style="font-size: 0.72rem; color: #fbbf24; display: flex; align-items: center; gap: 5px;">
+            <span style="width: 6px; height: 6px; background: #10b981; border-radius: 50%; display: inline-block;"></span> 24/7 Live Assistant
+          </div>
+        </div>
+      </div>
+      <button type="button" class="chatbot-close-btn" id="chatbotCloseBtn" aria-label="Close Assistant">
+        <i class="fa fa-times"></i>
+      </button>
+    </div>
+
+    <div class="chatbot-body" id="chatbotBody">
+      <div class="chatbot-msg chatbot-msg-bot">
+        <div class="chatbot-bubble">
+          ✨ Welcome to <strong>LUXE Concierge</strong>. How may I assist your shopping journey today?
+        </div>
+      </div>
+    </div>
+
+    <div class="chatbot-chips">
+      <button type="button" class="chatbot-chip" data-msg="Shipping and Delivery info">🚚 Delivery</button>
+      <button type="button" class="chatbot-chip" data-msg="Payment options and Stripe">💳 Payment</button>
+      <button type="button" class="chatbot-chip" data-msg="Return and Refund policy">🔄 Returns</button>
+      <button type="button" class="chatbot-chip" data-msg="Track my order history">📦 Orders</button>
+    </div>
+
+    <div class="chatbot-footer">
+      <form id="chatbotForm" class="chatbot-form">
+        {% csrf_token %}
+        <input type="text" id="chatbotInput" class="chatbot-input" placeholder="Ask about items, delivery, policies..." autocomplete="off">
+        <button type="submit" id="chatbotSendBtn" class="chatbot-send-btn" aria-label="Send message">
+          <i class="fa fa-paper-plane" style="font-size: 0.85rem;"></i>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Vanilla Scripts -->
+  <script src="{% static 'store/js/main.js' %}"></script>
+  <script src="{% static 'store/js/chatbot.js' %}"></script>
 </body>
 </html>
-
-
-

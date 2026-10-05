@@ -1,53 +1,79 @@
 {% extends 'store/base.html' %}
-{% block title %}Create Account — LUXE Store{% endblock %}
+{% block title %}Create Account — LUXE Studio{% endblock %}
 
 {% block content %}
-<div class="d-flex align-items-center justify-content-center py-5" style="min-height: 80vh;">
-  <div class="container" style="max-width: 460px;">
-    
-    <div class="text-center mb-4">
-      <div class="display-5 fw-bold text-dark mb-3">LUXE<span class="text-warning">.</span></div>
-      <h2 class="fw-bold fs-3">Create your account</h2>
-      <p class="text-secondary">Join thousands of happy shoppers</p>
-    </div>
-    
-    <div class="card shadow-sm border-0 bg-white">
-      <div class="card-body p-4 p-md-5">
-        
-        <form method="POST">
-          {% csrf_token %}
-          {% for field in form %}
-          <div class="mb-3 field-wrap">
-            <label class="form-label fw-bold small text-secondary text-uppercase tracking-wide">{{ field.label }}</label>
-            {{ field }}
-            {% if field.help_text %}<div class="form-text small text-secondary mt-1">{{ field.help_text }}</div>{% endif %}
-            {% if field.errors %}
-              <div class="text-danger small mt-1 fw-bold">
-                {% for e in field.errors %}<div>{{ e }}</div>{% endfor %}
-              </div>
-            {% endif %}
-          </div>
-          {% endfor %}
-          
-          <button type="submit" class="btn btn-dark w-100 py-3 fw-bold fs-6 mt-3">
-            <i class="fa fa-user-plus me-2"></i> Create Account
-          </button>
-        </form>
-        
-      </div>
-    </div>
-    
-    <div class="text-center mt-4">
-      <p class="text-secondary small mb-3">Already have an account? <a href="{% url 'login' %}" class="text-warning fw-bold text-decoration-none">Sign in</a></p>
-      
-      <div class="d-flex justify-content-center gap-3 flex-wrap text-secondary small">
-        <div class="d-flex align-items-center gap-1"><i class="fa fa-shield-alt text-warning"></i> Secure</div>
-        <div class="d-flex align-items-center gap-1"><i class="fa fa-heart text-warning"></i> Wishlist</div>
-        <div class="d-flex align-items-center gap-1"><i class="fa fa-box text-warning"></i> Track Orders</div>
-      </div>
-    </div>
-    
-  </div>
-</div>
+<div class="auth-wrapper">
+  
+  <div class="auth-split-card animate-fade-up">
 
+    <!-- Left Visual Panel -->
+    <div class="auth-visual-panel">
+      <div>
+        <div class="luxe-brand" style="color: #ffffff; margin-bottom: 2rem;">
+          <span>LUXE</span>
+          <span class="luxe-brand-dot"></span>
+        </div>
+        <h2 style="font-size: 2.2rem; color: #ffffff; line-height: 1.2; margin-bottom: 1rem;">
+          Join an Elite Circle of Shoppers
+        </h2>
+        <p style="color: rgba(255,255,255,0.7); font-size: 0.95rem; line-height: 1.6;">
+          Register to unlock exclusive drop alerts, private concierge support, and global express shipping benefits.
+        </p>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 0.75rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1.5rem;">
+        <div style="display: flex; align-items: center; gap: 8px; font-size: 0.82rem; color: rgba(255,255,255,0.8);">
+          <i class="fa-solid fa-gem" style="color: #fbbf24;"></i> Complimentary Luxury Gift Packaging
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px; font-size: 0.82rem; color: rgba(255,255,255,0.8);">
+          <i class="fa-solid fa-headset" style="color: #fbbf24;"></i> 24/7 Dedicated Concierge Access
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Form Panel -->
+    <div class="auth-form-panel">
+      
+      <h1 class="auth-title">Create Account</h1>
+      <p class="auth-subtitle">Join thousands experiencing modern curated luxury</p>
+
+      <form method="POST">
+        {% csrf_token %}
+
+        {% for field in form %}
+        <div class="luxe-form-group">
+          <label class="luxe-form-label">{{ field.label }}</label>
+          {{ field }}
+          
+          {% if field.help_text %}
+            <div style="font-size: 0.75rem; color: var(--text-subtle); margin-top: 4px; line-height: 1.4;">
+              {{ field.help_text|safe }}
+            </div>
+          {% endif %}
+
+          {% if field.errors %}
+            <div style="color: var(--accent-rose); font-size: 0.78rem; font-weight: 600; margin-top: 4px;">
+              {% for error in field.errors %}
+                <div>{{ error }}</div>
+              {% endfor %}
+            </div>
+          {% endif %}
+        </div>
+        {% endfor %}
+
+        <button type="submit" class="luxe-btn-gold" style="width: 100%; padding: 14px; font-size: 1rem; margin-top: 0.5rem;">
+          <i class="fa-solid fa-user-plus"></i>
+          <span>Create Membership Account</span>
+        </button>
+      </form>
+
+      <div style="text-align: center; margin-top: 1.75rem; font-size: 0.85rem; color: var(--text-muted);">
+        Already a member? <a href="{% url 'login' %}" style="font-weight: 700; color: var(--accent-gold-dark);">Sign in here</a>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
 {% endblock %}

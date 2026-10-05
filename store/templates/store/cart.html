@@ -1,117 +1,127 @@
 {% extends 'store/base.html' %}
-{% block title %}Your Cart — LUXE Store{% endblock %}
+{% block title %}Shopping Bag — LUXE Studio{% endblock %}
 
 {% block content %}
-<div class="py-5">
-  <div class="container">
+<div class="luxe-container" style="padding-top: 2rem;">
 
-    <div class="mb-5">
-      <h1 class="display-5 fw-bold text-dark">Your Cart</h1>
-      <p class="text-secondary">{{ items.count }} item{{ items.count|pluralize }} in your cart</p>
+  <div class="luxe-section-header">
+    <div>
+      <h1 class="luxe-section-title">Your Shopping Bag</h1>
+      <p class="luxe-section-subtitle">
+        {{ items.count }} curated item{{ items.count|pluralize }} in your private selection
+      </p>
     </div>
-
     {% if items %}
-    <div class="row g-5">
-
-      <div class="col-lg-8">
-        <div class="card shadow-sm border-0 mb-4">
-          <div class="card-body p-0">
-            {% for item in items %}
-            <div class="d-flex align-items-center p-4 border-bottom {% if forloop.last %}border-0{% endif %} flex-wrap gap-3">
-              <div class="bg-light rounded d-flex align-items-center justify-content-center overflow-hidden flex-shrink-0" style="width: 88px; height: 88px;">
-                {% if item.product.image %}
-                  <img src="/media/{{ item.product.image }}" alt="{{ item.product.name }}" class="w-100 h-100 object-fit-cover">
-                {% else %}
-                  <span class="text-secondary fs-4"><i class="fa fa-image"></i></span>
-                {% endif %}
-              </div>
-
-              <div class="flex-grow-1">
-                <div class="text-warning small fw-bold text-uppercase tracking-wide mb-1">{{ item.product.category.name }}</div>
-                <h5 class="fw-bold mb-1 fs-6">{{ item.product.name }}</h5>
-                <div class="text-secondary small mb-2">₹{{ item.product.price|floatformat:0 }} each</div>
-
-                <div class="d-flex align-items-center gap-2 mt-2">
-                  <form method="POST" action="{% url 'update_cart' item.pk %}" class="m-0">
-                    {% csrf_token %}
-                    <input type="hidden" name="quantity" value="{{ item.quantity|add:'-1' }}">
-                    <button class="btn btn-outline-secondary btn-sm" type="submit" {% if item.quantity <= 1 %}disabled{% endif %}>−</button>
-                  </form>
-
-                  <span class="fw-bold px-2">{{ item.quantity }}</span>
-
-                  <form method="POST" action="{% url 'update_cart' item.pk %}" class="m-0">
-                    {% csrf_token %}
-                    <input type="hidden" name="quantity" value="{{ item.quantity|add:'1' }}">
-                    <button class="btn btn-outline-secondary btn-sm" type="submit">+</button>
-                  </form>
-
-                  <a href="{% url 'remove_from_cart' item.pk %}" class="btn btn-sm btn-outline-danger border-0 ms-2">
-                    <i class="fa fa-trash"></i> Remove
-                  </a>
-                </div>
-              </div>
-
-              <div class="text-end ms-auto">
-                <div class="fw-bold fs-5 text-dark">₹<span>{{ item.total_price|floatformat:0 }}</span></div>
-                <div class="text-secondary small">₹{{ item.product.price|floatformat:0 }} each</div>
-              </div>
-            </div>
-            {% endfor %}
-          </div>
-        </div>
-        
-        <div class="d-flex justify-content-between">
-          <a href="/" class="btn btn-outline-secondary btn-sm"><i class="fa fa-arrow-left me-1"></i> Continue Shopping</a>
-        </div>
-      </div>
-
-      <div class="col-lg-4">
-        <div class="card bg-light border-0 shadow-sm sticky-top" style="top: 100px;">
-          <div class="card-body p-4">
-            <h4 class="fw-bold mb-4">Order Summary</h4>
-            
-            {% for item in items %}
-            <div class="d-flex justify-content-between mb-2 text-secondary small">
-              <span>{{ item.product.name|truncatechars:22 }} × {{ item.quantity }}</span>
-              <span>₹{{ item.product.price|floatformat:0 }}</span>
-            </div>
-            {% endfor %}
-            
-            <div class="d-flex justify-content-between mb-3 text-secondary small">
-              <span>Delivery</span>
-              <span class="text-success fw-bold">Free</span>
-            </div>
-            
-            <hr class="text-secondary opacity-25 my-3">
-            
-            <div class="d-flex justify-content-between fw-bold fs-5 text-dark mb-4">
-              <span>Total</span>
-              <span>₹{{ total|floatformat:0 }}</span>
-            </div>
-            
-            <a href="{% url 'checkout' %}" class="btn btn-dark w-100 py-2 fw-bold fs-6">
-              <i class="fa fa-lock me-1"></i> Secure Checkout
-            </a>
-            
-            <div class="text-center text-secondary small mt-3">
-              <i class="fa fa-shield-alt"></i> 256-bit SSL encrypted
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </div>
-
-    {% else %}
-    <div class="text-center py-5">
-      <div class="text-secondary mb-3"><i class="fa fa-shopping-cart fa-3x"></i></div>
-      <h3 class="fw-bold">Your cart is empty</h3>
-      <p class="text-secondary mb-4">Looks like you haven't added anything yet. Start shopping!</p>
-      <a href="/" class="btn btn-dark"><i class="fa fa-arrow-right me-1"></i> Browse Products</a>
-    </div>
+      <a href="/" class="luxe-btn-outline">
+        <i class="fa fa-arrow-left"></i>
+        <span>Continue Exploring</span>
+      </a>
     {% endif %}
+  </div>
+
+  {% if items %}
+  <div class="cart-layout animate-fade-up">
+
+    <!-- Left: Cart Items Deck -->
+    <div class="cart-items-container">
+      {% for item in items %}
+      <div class="cart-item-card">
+        
+        <div class="cart-item-thumb">
+          {% if item.product.image %}
+            <img src="/media/{{ item.product.image }}" alt="{{ item.product.name }}">
+          {% else %}
+            <i class="fa-solid fa-gem" style="color: var(--text-subtle); font-size: 1.5rem;"></i>
+          {% endif %}
+        </div>
+
+        <div class="cart-item-info">
+          <div class="cart-item-cat">{{ item.product.category.name }}</div>
+          <h3 class="cart-item-name" title="{{ item.product.name }}">{{ item.product.name }}</h3>
+          <div class="cart-item-unit-price">₹{{ item.product.price|floatformat:0 }} per unit</div>
+
+          <div class="cart-qty-stepper">
+            <form method="POST" action="{% url 'update_cart' item.pk %}" style="margin: 0; display: inline;">
+              {% csrf_token %}
+              <input type="hidden" name="quantity" value="{{ item.quantity|add:'-1' }}">
+              <button class="stepper-btn" type="submit" {% if item.quantity <= 1 %}disabled{% endif %} aria-label="Decrease quantity">−</button>
+            </form>
+
+            <span class="stepper-val">{{ item.quantity }}</span>
+
+            <form method="POST" action="{% url 'update_cart' item.pk %}" style="margin: 0; display: inline;">
+              {% csrf_token %}
+              <input type="hidden" name="quantity" value="{{ item.quantity|add:'1' }}">
+              <button class="stepper-btn" type="submit" aria-label="Increase quantity">+</button>
+            </form>
+
+            <a href="{% url 'remove_from_cart' item.pk %}" class="cart-remove-link" title="Remove item">
+              <i class="fa fa-trash-can" style="margin-right: 4px;"></i> Remove
+            </a>
+          </div>
+        </div>
+
+        <div class="cart-item-total">
+          <div class="luxe-card-price-label">Subtotal</div>
+          <div class="cart-item-total-price">₹{{ item.total_price|floatformat:0 }}</div>
+        </div>
+
+      </div>
+      {% endfor %}
+    </div>
+
+    <!-- Right: Sticky Order Summary Card -->
+    <div class="order-summary-card">
+      <h2 class="summary-title">Summary</h2>
+      
+      <div class="summary-row">
+        <span>Items Subtotal ({{ items.count }})</span>
+        <strong>₹{{ total|floatformat:0 }}</strong>
+      </div>
+      
+      <div class="summary-row">
+        <span>Express Courier</span>
+        <strong style="color: var(--accent-emerald);">Complimentary</strong>
+      </div>
+
+      <div class="summary-row">
+        <span>Estimated Taxes</span>
+        <strong>Included</strong>
+      </div>
+
+      <div class="summary-divider"></div>
+
+      <div class="summary-total-row">
+        <span>Total Due</span>
+        <span class="summary-total-val">₹{{ total|floatformat:0 }}</span>
+      </div>
+
+      <a href="{% url 'checkout' %}" class="luxe-btn-gold" style="width: 100%; padding: 14px; text-align: center; font-size: 1rem;">
+        <i class="fa-solid fa-lock"></i>
+        <span>Proceed to Secure Checkout</span>
+      </a>
+
+      <div class="summary-trust-badge">
+        <i class="fa-solid fa-shield-halved" style="color: var(--accent-gold);"></i>
+        <span>Protected with 256-bit encrypted checkout</span>
+      </div>
+    </div>
 
   </div>
+
+  {% else %}
+  <div class="luxe-empty-card">
+    <div class="luxe-empty-icon">
+      <i class="fa-solid fa-bag-shopping"></i>
+    </div>
+    <h2 class="luxe-empty-title">Your Shopping Bag is Empty</h2>
+    <p class="luxe-empty-text">You haven't reserved any luxury items yet. Explore our curated catalogue and discover pieces crafted for you.</p>
+    <a href="/" class="luxe-btn-primary">
+      <i class="fa-solid fa-compass"></i>
+      <span>Discover Collections</span>
+    </a>
+  </div>
+  {% endif %}
+
 </div>
 {% endblock %}

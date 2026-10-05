@@ -1,3 +1,8 @@
+/* ==========================================================================
+   LUXE CONCIERGE CHATBOT WIDGET
+   Pure JS (No Bootstrap dependencies)
+   ========================================================================== */
+
 document.addEventListener('DOMContentLoaded', function () {
   const toggleBtn = document.getElementById('chatbotToggleBtn');
   const chatWindow = document.getElementById('chatbotWindow');
@@ -48,7 +53,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const loadingDiv = document.createElement('div');
     loadingDiv.id = 'chatbotLoading';
     loadingDiv.className = 'chatbot-msg chatbot-msg-bot';
-    loadingDiv.innerHTML = '<div class="chatbot-bubble opacity-75"><em>Thinking...</em></div>';
+    loadingDiv.innerHTML = '<div class="chatbot-bubble" style="opacity:0.8;"><i class="fa fa-spinner fa-spin" style="margin-right:6px;"></i><em>Concierge is thinking...</em></div>';
     chatBody.appendChild(loadingDiv);
     scrollToBottom();
   }
@@ -103,15 +108,15 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   toggleBtn.addEventListener('click', function () {
-    chatWindow.classList.toggle('d-none');
-    if (!chatWindow.classList.contains('d-none') && chatInput) {
+    chatWindow.classList.toggle('hidden');
+    if (!chatWindow.classList.contains('hidden') && chatInput) {
       chatInput.focus();
     }
   });
 
   if (closeBtn) {
     closeBtn.addEventListener('click', function () {
-      chatWindow.classList.add('d-none');
+      chatWindow.classList.add('hidden');
     });
   }
 

@@ -1,61 +1,100 @@
 {% extends 'store/base.html' %}
-{% block title %}Order History — LUXE Store{% endblock %}
+{% block title %}Order Portfolio — LUXE Studio{% endblock %}
 
 {% block content %}
-<div class="py-5">
-  <div class="container">
+<div class="luxe-container" style="padding-top: 2rem;">
 
-    <div class="mb-5">
-      <h1 class="display-5 fw-bold text-dark">Order History</h1>
-      <p class="text-secondary">{{ orders.count }} order{{ orders.count|pluralize }} placed</p>
+  <div class="luxe-section-header">
+    <div>
+      <h1 class="luxe-section-title">Order History & Tracking</h1>
+      <p class="luxe-section-subtitle">
+        {{ orders.count }} order{{ orders.count|pluralize }} recorded in your personal client log
+      </p>
     </div>
+    <a href="/" class="luxe-btn-outline">
+      <i class="fa fa-compass"></i>
+      <span>Browse Catalog</span>
+    </a>
+  </div>
 
-    {% if orders %}
-    <div class="d-flex flex-column gap-4">
-      {% for order in orders %}
-      <div class="card shadow-sm border-0 bg-white">
-        <div class="card-body p-4 p-md-5">
-          <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4 pb-4 border-bottom">
-            <div>
-              <div class="text-secondary small fw-bold text-uppercase tracking-wide mb-1">Order #{{ order.pk }}</div>
-              <div class="text-secondary small">
-                <i class="fa fa-calendar text-warning me-1"></i> {{ order.created_at|date:"M d, Y" }}
-              </div>
-            </div>
-            <div class="d-flex align-items-center gap-3">
-              {% if order.status == 'Paid' %}
-                <span class="badge bg-success-subtle text-success px-3 py-2 rounded-pill">Paid</span>
-              {% else %}
-                <span class="badge bg-secondary-subtle text-secondary px-3 py-2 rounded-pill">{{ order.status }}</span>
-              {% endif %}
-              <div class="fs-4 fw-bold text-dark">₹{{ order.total_price|floatformat:0 }}</div>
-            </div>
+  {% if orders %}
+  <div class="order-history-list animate-fade-up">
+    {% for order in orders %}
+    <div class="order-receipt-card">
+      
+      <div class="order-receipt-header">
+        <div>
+          <div style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--accent-gold-dark);">
+            Official Receipt #LX-{{ order.pk|stringformat:"05d" }}
           </div>
-          
-          <div class="d-flex flex-wrap gap-2">
-            {% for oi in order.orderitem_set.all %}
-              <span class="bg-light border border-secondary-subtle rounded-pill px-3 py-1 small text-secondary">
-                {{ oi.product.name|truncatechars:20 }} × {{ oi.quantity }}
-              </span>
-            {% empty %}
-              <span class="bg-light border border-secondary-subtle rounded-pill px-3 py-1 small text-secondary">
-                No items recorded
-              </span>
-            {% endfor %}
+          <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 4px; display: flex; align-items: center; gap: 6px;">
+            <i class="fa-regular fa-calendar" style="color: var(--accent-gold);"></i>
+            <span>{{ order.created_at|date:"F d, Y · h:i A" }}</span>
+          </div>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 1rem;">
+          {% if order.status == 'Paid' %}
+            <span class="order-badge-paid">
+              <i class="fa-solid fa-circle-check"></i> Paid & Processing
+            </span>
+          {% else %}
+            <span class="order-badge-paid" style="background: #f1f5f9; color: var(--text-body);">
+              {{ order.status }}
+            </span>
+          {% endif %}
+
+          <div style="font-family: var(--font-display); font-size: 1.4rem; font-weight: 800; color: var(--text-dark);">
+            ₹{{ order.total_price|floatformat:0 }}
           </div>
         </div>
       </div>
-      {% endfor %}
-    </div>
-    {% else %}
-    <div class="text-center py-5">
-      <div class="text-secondary mb-3"><i class="fa fa-box-open fa-3x"></i></div>
-      <h3 class="fw-bold">No orders yet</h3>
-      <p class="text-secondary mb-4">Once you place an order, it'll show up here.</p>
-      <a href="/" class="btn btn-dark"><i class="fa fa-arrow-right me-1"></i> Start Shopping</a>
-    </div>
-    {% endif %}
 
+      <!-- Timeline Tracking Indicator -->
+      <div style="margin: 1.25rem 0 1rem; background: #f8fafc; border: 1px solid var(--border-light); border-radius: var(--radius-md); padding: 1rem 1.25rem;">
+        <div style="display: flex; justify-content: space-between; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); margin-bottom: 0.5rem;">
+          <span style="color: var(--accent-emerald);"><i class="fa-solid fa-check"></i> Order Placed</span>
+          <span style="color: var(--accent-emerald);"><i class="fa-solid fa-check"></i> Payment Authorized</span>
+          <span style="color: var(--accent-gold-dark);"><i class="fa-solid fa-box"></i> Preparing Delivery</span>
+          <span style="color: var(--text-subtle);"><i class="fa-solid fa-truck"></i> Dispatched</span>
+        </div>
+        <div style="height: 6px; background: #e2e8f0; border-radius: var(--radius-pill); overflow: hidden; position: relative;">
+          <div style="width: 75%; height: 100%; background: var(--accent-gold-gradient); border-radius: var(--radius-pill);"></div>
+        </div>
+      </div>
+
+      <!-- Item Chips -->
+      <div style="font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-subtle); margin-top: 1rem;">
+        Acquired Pieces ({{ order.orderitem_set.count }}):
+      </div>
+
+      <div class="order-items-chip-deck">
+        {% for oi in order.orderitem_set.all %}
+          <div class="order-item-pill">
+            <strong style="color: var(--text-dark);">{{ oi.product.name }}</strong> &nbsp;·&nbsp; Qty: {{ oi.quantity }} &nbsp;·&nbsp; ₹{{ oi.total_price|floatformat:0 }}
+          </div>
+        {% empty %}
+          <div class="order-item-pill">No item details recorded</div>
+        {% endfor %}
+      </div>
+
+    </div>
+    {% endfor %}
   </div>
+
+  {% else %}
+  <div class="luxe-empty-card">
+    <div class="luxe-empty-icon">
+      <i class="fa-solid fa-box-open"></i>
+    </div>
+    <h2 class="luxe-empty-title">No Orders Yet</h2>
+    <p class="luxe-empty-text">Your portfolio is currently awaiting its first order. Experience curated luxury shopping with 2-4 day express delivery.</p>
+    <a href="/" class="luxe-btn-primary">
+      <i class="fa-solid fa-gem"></i>
+      <span>Start Curating Your Style</span>
+    </a>
+  </div>
+  {% endif %}
+
 </div>
 {% endblock %}

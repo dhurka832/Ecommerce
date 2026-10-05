@@ -1,51 +1,81 @@
 {% extends 'store/base.html' %}
-{% block title %}Login — LUXE Store{% endblock %}
+{% block title %}Sign In — LUXE Studio{% endblock %}
 
 {% block content %}
-<div class="d-flex align-items-center justify-content-center py-5" style="min-height: 80vh;">
-  <div class="container" style="max-width: 420px;">
-    
-    <div class="text-center mb-4">
-      <div class="display-5 fw-bold text-dark mb-3">LUXE<span class="text-warning">.</span></div>
-      <h2 class="fw-bold fs-3">Welcome back</h2>
-      <p class="text-secondary">Sign in to your account to continue</p>
-    </div>
-    
-    <div class="card shadow-sm border-0 bg-white">
-      <div class="card-body p-4 p-md-5">
-        
-        {% if form.non_field_errors %}
-          <div class="alert alert-danger p-3 mb-4">
-            <ul class="mb-0 ps-3 small fw-bold">
-              {% for error in form.non_field_errors %}<li>{{ error }}</li>{% endfor %}
-            </ul>
-          </div>
-        {% endif %}
-        
-        <form method="POST">
-          {% csrf_token %}
-          <div class="mb-3">
-            <label class="form-label fw-bold small text-secondary text-uppercase tracking-wide">Username</label>
-            <input type="text" name="username" class="form-control p-3 bg-light" placeholder="Enter your username" autofocus>
-          </div>
-          
-          <div class="mb-4">
-            <label class="form-label fw-bold small text-secondary text-uppercase tracking-wide">Password</label>
-            <input type="password" name="password" class="form-control p-3 bg-light" placeholder="Enter your password">
-          </div>
-          
-          <button type="submit" class="btn btn-dark w-100 py-3 fw-bold fs-6">
-            <i class="fa fa-sign-in-alt me-2"></i> Sign In
-          </button>
-        </form>
-        
+<div class="auth-wrapper">
+  
+  <div class="auth-split-card animate-fade-up">
+
+    <!-- Left Visual Panel -->
+    <div class="auth-visual-panel">
+      <div>
+        <div class="luxe-brand" style="color: #ffffff; margin-bottom: 2rem;">
+          <span>LUXE</span>
+          <span class="luxe-brand-dot"></span>
+        </div>
+        <h2 style="font-size: 2.2rem; color: #ffffff; line-height: 1.2; margin-bottom: 1rem;">
+          Access Your Curated Portfolio
+        </h2>
+        <p style="color: rgba(255,255,255,0.7); font-size: 0.95rem; line-height: 1.6;">
+          Sign in to access your personal concierge, synchronized wishlists, and express 1-click checkout.
+        </p>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 0.75rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1.5rem;">
+        <div style="display: flex; align-items: center; gap: 8px; font-size: 0.82rem; color: rgba(255,255,255,0.8);">
+          <i class="fa-solid fa-circle-check" style="color: #fbbf24;"></i> Member-Only Limited Edition Pieces
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px; font-size: 0.82rem; color: rgba(255,255,255,0.8);">
+          <i class="fa-solid fa-circle-check" style="color: #fbbf24;"></i> Real-Time Courier Tracking
+        </div>
       </div>
     </div>
-    
-    <div class="text-center mt-4">
-      <p class="text-secondary small">Don't have an account? <a href="{% url 'register' %}" class="text-warning fw-bold text-decoration-none">Create one free</a></p>
+
+    <!-- Right Form Panel -->
+    <div class="auth-form-panel">
+      
+      <h1 class="auth-title">Welcome Back</h1>
+      <p class="auth-subtitle">Enter your credentials to manage your acquisitions</p>
+
+      {% if form.non_field_errors %}
+      <div style="background: var(--accent-rose-light); border: 1px solid var(--accent-rose); border-radius: var(--radius-md); padding: 1rem; margin-bottom: 1.5rem; color: var(--accent-rose); font-size: 0.85rem; font-weight: 600;">
+        {% for error in form.non_field_errors %}
+          <div>{{ error }}</div>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      <form method="POST">
+        {% csrf_token %}
+
+        <div class="luxe-form-group">
+          <label class="luxe-form-label">Username</label>
+          <input type="text" name="username" class="luxe-input" placeholder="Enter username" required autofocus autocomplete="username">
+        </div>
+
+        <div class="luxe-form-group">
+          <label class="luxe-form-label">Password</label>
+          <div style="position: relative;">
+            <input type="password" name="password" id="loginPasswordInput" class="luxe-input" placeholder="Enter password" required autocomplete="current-password" style="padding-right: 42px;">
+            <button type="button" class="toggle-password-btn" data-target="loginPasswordInput" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: transparent; border: none; color: var(--text-subtle); cursor: pointer; padding: 4px;" aria-label="Toggle password visibility">
+              <i class="fa fa-eye"></i>
+            </button>
+          </div>
+        </div>
+
+        <button type="submit" class="luxe-btn-gold" style="width: 100%; padding: 14px; font-size: 1rem; margin-top: 0.5rem;">
+          <i class="fa-solid fa-arrow-right-to-bracket"></i>
+          <span>Sign In to Account</span>
+        </button>
+      </form>
+
+      <div style="text-align: center; margin-top: 1.75rem; font-size: 0.85rem; color: var(--text-muted);">
+        New to LUXE? <a href="{% url 'register' %}" style="font-weight: 700; color: var(--accent-gold-dark);">Create an account</a>
+      </div>
+
     </div>
-    
+
   </div>
+
 </div>
 {% endblock %}
