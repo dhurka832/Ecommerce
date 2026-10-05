@@ -6,7 +6,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{% block title %}LUXE — Curated Luxury & Lifestyle{% endblock %}</title>
   
-  <!-- Font Awesome 6 -->
+  <!-- Google Fonts & Font Awesome 6 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&family=Syne:wght@500;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   
   <!-- Custom Luxe Design System (Pure CSS - No Bootstrap) -->
@@ -148,56 +151,7 @@
     </div>
   </footer>
 
-  <!-- Floating Concierge Chatbot Button & Card Modal -->
-  <button class="chatbot-fab-btn" id="chatbotToggleBtn" title="LUXE Private Concierge">
-    <span class="chatbot-fab-pulse"></span>
-    <i class="fa-solid fa-headset"></i>
-  </button>
-
-  <div class="chatbot-window-card hidden" id="chatbotWindow">
-    <div class="chatbot-header">
-      <div style="display: flex; align-items: center; gap: 10px;">
-        <div class="chatbot-avatar"><i class="fa-solid fa-sparkles"></i></div>
-        <div>
-          <div style="font-weight: 700; font-size: 0.95rem; color: #fff;">LUXE Concierge</div>
-          <div style="font-size: 0.72rem; color: #fbbf24; display: flex; align-items: center; gap: 5px;">
-            <span style="width: 6px; height: 6px; background: #10b981; border-radius: 50%; display: inline-block;"></span> 24/7 Live Assistant
-          </div>
-        </div>
-      </div>
-      <button type="button" class="chatbot-close-btn" id="chatbotCloseBtn" aria-label="Close Assistant">
-        <i class="fa fa-times"></i>
-      </button>
-    </div>
-
-    <div class="chatbot-body" id="chatbotBody">
-      <div class="chatbot-msg chatbot-msg-bot">
-        <div class="chatbot-bubble">
-          ✨ Welcome to <strong>LUXE Concierge</strong>. How may I assist your shopping journey today?
-        </div>
-      </div>
-    </div>
-
-    <div class="chatbot-chips">
-      <button type="button" class="chatbot-chip" data-msg="Shipping and Delivery info">🚚 Delivery</button>
-      <button type="button" class="chatbot-chip" data-msg="Payment options and Stripe">💳 Payment</button>
-      <button type="button" class="chatbot-chip" data-msg="Return and Refund policy">🔄 Returns</button>
-      <button type="button" class="chatbot-chip" data-msg="Track my order history">📦 Orders</button>
-    </div>
-
-    <div class="chatbot-footer">
-      <form id="chatbotForm" class="chatbot-form">
-        {% csrf_token %}
-        <input type="text" id="chatbotInput" class="chatbot-input" placeholder="Ask about items, delivery, policies..." autocomplete="off">
-        <button type="submit" id="chatbotSendBtn" class="chatbot-send-btn" aria-label="Send message">
-          <i class="fa fa-paper-plane" style="font-size: 0.85rem;"></i>
-        </button>
-      </form>
-    </div>
-  </div>
-
   <!-- Vanilla Scripts -->
   <script src="{% static 'store/js/main.js' %}"></script>
-  <script src="{% static 'store/js/chatbot.js' %}"></script>
 </body>
 </html>

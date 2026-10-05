@@ -1,13 +1,13 @@
-# 🛍️ LUXE — Full-Stack E-Commerce & AI Concierge
+# 🛍️ LUXE — Full-Stack E-Commerce Platform
 
-A modern, high-performance e-commerce web platform built with **Django 5** and **Pure HTML5 / CSS3 / Vanilla JavaScript** (Zero Bootstrap), featuring an interactive **AI Support Concierge**, dynamic bento-grid catalog, and secure **Stripe Payment API** integration.
+A modern, high-performance e-commerce web platform built with **Django 5** and **Pure HTML5 / CSS3 / Vanilla JavaScript** (Zero Bootstrap), featuring an interactive **AI Shopping Assistant**, dynamic product catalog, and secure **Stripe Payment API** integration.
 
 ---
 
 ## ⚡ Key Highlights
 
-- **Bespoke Card-Driven UI:** Handcrafted design system built with pure CSS & vanilla JS, featuring bento grids, responsive mobile drawers, and smooth micro-interactions.
-- **AI Concierge Assistant:** Real-time conversational support widget for instant FAQ resolution, order tracking, and product recommendations.
+- **Bespoke Card-Driven UI:** Handcrafted design system built with pure CSS & vanilla JS, featuring responsive grids, mobile drawer navigation, and smooth micro-interactions.
+- **AI Shopping Assistant:** Real-time conversational support widget for instant FAQ resolution, order tracking, and product recommendations.
 - **Secure Stripe Checkout:** End-to-end payment gateway integration with live interactive credit card formatting and instant test simulator presets.
 - **Complete Shopping Lifecycle:** User authentication, dynamic category filtering, live search, cart quantity steppers, wishlist persistence, and order history tracking.
 
@@ -18,7 +18,7 @@ A modern, high-performance e-commerce web platform built with **Django 5** and *
 - **Backend:** Python 3.10+, Django 5.x, SQLite / Django ORM
 - **Payments:** Stripe API (Test & Live Card Support)
 - **Frontend:** HTML5, Modern CSS3 (Flexbox/Grid, Custom Properties), Vanilla JavaScript (ES6+)
-- **Icons & Typography:** Font Awesome 6, Google Fonts (Syne, Plus Jakarta Sans)
+- **Icons & Typography:** Font Awesome 6, Google Fonts (Plus Jakarta Sans, Outfit, Syne)
 
 ---
 
@@ -65,7 +65,7 @@ Ecommerce/
 │   ├── static/store/   # Bespoke CSS, vanilla JS & chatbot engine
 │   ├── templates/store/# Custom HTML5 card-driven templates
 │   ├── models.py       # Product, Cart, Order, Wishlist schemas
-│   └── views.py        # Business logic & AI chatbot API endpoint
+│   └── views.py        # Business logic & AI assistant API endpoint
 └── manage.py
 ```
 

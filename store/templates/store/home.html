@@ -1,24 +1,24 @@
 {% extends 'store/base.html' %}
-{% block title %}LUXE — Premium Curated Shopping{% endblock %}
+{% block title %}LUXE — Curated Luxury & Modern Lifestyle{% endblock %}
 
 {% block content %}
 <div class="luxe-container">
 
-  <!-- Editorial Hero Bento Grid -->
-  <section class="luxe-hero-bento">
+  <!-- Editorial Hero Section -->
+  <section class="luxe-hero-banner animate-fade-in">
     
     <!-- Primary Showcase Card -->
     <div class="hero-main-card">
       <div>
         <div class="hero-tag-badge">
           <span class="hero-tag-pulse"></span>
-          <span>Editorial Edition 2026</span>
+          <span>Curated Edition 2026</span>
         </div>
         <h1 class="hero-title">
-          Elevate Your <em>Standard</em> Of Living.
+          Redefine Modern <em>Elegance</em> & Style.
         </h1>
         <p class="hero-subtitle">
-          Uncompromising craftsmanship meets timeless modern design. Explore our latest hand-picked pieces with global express delivery.
+          Discover hand-selected luxury essentials, premium craftsmanship, and timeless designs curated for the modern connoisseur.
         </p>
         <div class="hero-cta-group">
           <a href="#catalog" class="luxe-btn-gold">
@@ -35,7 +35,7 @@
       <div class="hero-stats-row">
         <div class="hero-stat-item">
           <div class="hero-stat-num">100%</div>
-          <div class="hero-stat-label">Authentic Guarantee</div>
+          <div class="hero-stat-label">Verified Quality</div>
         </div>
         <div class="hero-stat-item">
           <div class="hero-stat-num">2-4 Days</div>
@@ -48,45 +48,50 @@
       </div>
     </div>
 
-    <!-- Bento Side Feature Cards -->
-    <div class="hero-side-stack">
-      
-      <!-- Feature Card 1: Concierge -->
-      <div class="bento-card bento-card-dark" style="cursor: pointer;" onclick="document.getElementById('chatbotToggleBtn').click();">
-        <div>
-          <div class="bento-card-icon bento-card-icon-dark">
-            <i class="fa-solid fa-sparkles"></i>
-          </div>
-          <h4>Private Concierge</h4>
-          <p>Instant personal styling assistance, delivery tracking, and bespoke recommendations.</p>
-        </div>
-        <span class="bento-card-link">
-          <span>Chat with Assistant</span>
-          <i class="fa fa-arrow-right"></i>
-        </span>
-      </div>
+  </section>
 
-      <!-- Feature Card 2: Express Shipping & Protection -->
-      <div class="bento-card">
-        <div>
-          <div class="bento-card-icon">
-            <i class="fa-solid fa-shield-halved"></i>
-          </div>
-          <h4>Buyer Protection</h4>
-          <p>Stripe 256-bit encrypted checkout with insured express shipping on all orders.</p>
-        </div>
-        <span class="bento-card-link">
-          <span>Learn More</span>
-          <i class="fa fa-arrow-right"></i>
-        </span>
+  <!-- Value Proposition Bar -->
+  <section class="hero-features-bar">
+    <div class="hero-feature-card">
+      <div class="hero-feature-icon">
+        <i class="fa-solid fa-truck-fast"></i>
       </div>
-
+      <div>
+        <div class="hero-feature-title">Express Worldwide Shipping</div>
+        <div class="hero-feature-desc">Fast 2-4 business day delivery with real-time tracking</div>
+      </div>
     </div>
-
+    <div class="hero-feature-card">
+      <div class="hero-feature-icon">
+        <i class="fa-solid fa-gem"></i>
+      </div>
+      <div>
+        <div class="hero-feature-title">Authentic & Curated</div>
+        <div class="hero-feature-desc">Hand-picked premium materials and quality assurance</div>
+      </div>
+    </div>
+    <div class="hero-feature-card">
+      <div class="hero-feature-icon">
+        <i class="fa-solid fa-rotate-left"></i>
+      </div>
+      <div>
+        <div class="hero-feature-title">7-Day Easy Returns</div>
+        <div class="hero-feature-desc">Hassle-free return policy and seamless exchanges</div>
+      </div>
+    </div>
+    <div class="hero-feature-card">
+      <div class="hero-feature-icon">
+        <i class="fa-solid fa-lock"></i>
+      </div>
+      <div>
+        <div class="hero-feature-title">Encrypted Checkout</div>
+        <div class="hero-feature-desc">Bank-grade 256-bit encryption powered by Stripe</div>
+      </div>
+    </div>
   </section>
 
   <!-- Category Filter Cards Deck -->
-  <section id="catalog" style="margin-top: 3rem;">
+  <section id="catalog">
     <div class="luxe-section-header">
       <div>
         <h2 class="luxe-section-title">
@@ -205,6 +210,30 @@
       </div>
     {% endif %}
 
+  </section>
+
+  <!-- Showcase / Newsletter Promo Banner -->
+  <section class="luxe-promo-banner animate-fade-up">
+    <div>
+      <div class="promo-badge">
+        <i class="fa-solid fa-sparkles"></i> Seasonal Showcase
+      </div>
+      <h2 class="promo-title">Experience Premium Living</h2>
+      <p class="promo-subtitle">
+        Join our exclusive community to receive early access to private seasonal drops, artisanal collections, and members-only events.
+      </p>
+    </div>
+    <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
+      <a href="#catalog" class="luxe-btn-gold" style="padding: 12px 26px;">
+        <span>Shop Collections</span>
+        <i class="fa fa-arrow-right"></i>
+      </a>
+      {% if not user.is_authenticated %}
+        <a href="{% url 'register' %}" class="luxe-btn-outline" style="color: #ffffff; border-color: rgba(255,255,255,0.3);">
+          <span>Create Account</span>
+        </a>
+      {% endif %}
+    </div>
   </section>
 
 </div>
