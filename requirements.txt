@@ -3,7 +3,8 @@ django-crispy-forms
 crispy-bootstrap5
 stripe
 python-dotenv
-pillow
+pillow 
 
 
-
+
+

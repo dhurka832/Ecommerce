@@ -1,5 +1,5 @@
 /* ==========================================================================
-   LUXE STORE ASSISTANT CHATBOT WIDGET
+   LUXE CONCIERGE CHATBOT WIDGET
    Pure JS (No Bootstrap dependencies)
    ========================================================================== */
 
@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const loadingDiv = document.createElement('div');
     loadingDiv.id = 'chatbotLoading';
     loadingDiv.className = 'chatbot-msg chatbot-msg-bot';
-    loadingDiv.innerHTML = '<div class="chatbot-bubble" style="opacity:0.8;"><i class="fa fa-spinner fa-spin" style="margin-right:6px;"></i><em>Assistant is thinking...</em></div>';
+    loadingDiv.innerHTML = '<div class="chatbot-bubble" style="opacity:0.8;"><i class="fa fa-spinner fa-spin" style="margin-right:6px;"></i><em>Concierge is thinking...</em></div>';
     chatBody.appendChild(loadingDiv);
     scrollToBottom();
   }

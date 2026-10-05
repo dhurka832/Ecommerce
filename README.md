@@ -1,30 +1,47 @@
 # 🛍️ LUXE — Full-Stack E-Commerce Platform
 
-A modern, high-performance e-commerce web platform built with **Django 5** and **Pure HTML5 / CSS3 / Vanilla JavaScript** (Zero Bootstrap), featuring an interactive **AI Shopping Assistant**, dynamic product catalog, and secure **Stripe Payment API** integration.
+A sleek, full-featured e-commerce web platform built with **Django 5** and **Modern Pure CSS3 / JavaScript** (zero UI framework overhead), featuring full catalog discovery, persistent carts, and end-to-end **Stripe Payment** integration.
 
 ---
 
-## ⚡ Key Highlights
+## ✨ Features
 
-- **Bespoke Card-Driven UI:** Handcrafted design system built with pure CSS & vanilla JS, featuring responsive grids, mobile drawer navigation, and smooth micro-interactions.
-- **AI Shopping Assistant:** Real-time conversational support widget for instant FAQ resolution, order tracking, and product recommendations.
-- **Secure Stripe Checkout:** End-to-end payment gateway integration with live interactive credit card formatting and instant test simulator presets.
-- **Complete Shopping Lifecycle:** User authentication, dynamic category filtering, live search, cart quantity steppers, wishlist persistence, and order history tracking.
+- **Product Discovery:** Instant search and category-based filtering across product collections.
+- **Cart & Wishlist:** Persistent session/user cart management with quantity steppers and quick wishlist toggle.
+- **Secure Stripe Checkout:** Integrated Stripe API payment gateway with interactive test card presets.
+- **Order Management:** Real-time post-checkout confirmation and persistent order history tracking.
+- **User Authentication:** Secure registration, login/logout, and protected client views.
+- **Modern Bespoke UI:** Pure CSS3 styling (Flexbox/Grid), custom typography (`Outfit` + `Inter`), and responsive mobile drawer navigation.
 
 ---
 
 ## 🛠️ Tech Stack
 
-- **Backend:** Python 3.10+, Django 5.x, SQLite / Django ORM
-- **Payments:** Stripe API (Test & Live Card Support)
-- **Frontend:** HTML5, Modern CSS3 (Flexbox/Grid, Custom Properties), Vanilla JavaScript (ES6+)
-- **Icons & Typography:** Font Awesome 6, Google Fonts (Plus Jakarta Sans, Outfit, Syne)
+| Layer | Technologies |
+|---|---|
+| **Backend** | Python 3.10+, Django 5.x, Django ORM, SQLite |
+| **Payments** | Stripe API |
+| **Frontend** | HTML5, Modern CSS3, Vanilla JavaScript (ES6+) |
+| **Typography & Icons** | Google Fonts (Outfit, Inter), Font Awesome 6 |
+
+---
+
+## 📸 Preview
+
+<p align="center">
+  <img src="screenshots/hero.jpg" width="48%" alt="Hero Banner" />
+  <img src="screenshots/all-products.jpg" width="48%" alt="Product Catalog" />
+</p>
+<p align="center">
+  <img src="screenshots/shopping-bag.jpg" width="48%" alt="Shopping Bag" />
+  <img src="screenshots/checkout.jpg" width="48%" alt="Stripe Checkout" />
+</p>
 
 ---
 
 ## 🚀 Quick Start
 
-### 1. Clone & Activate Virtual Environment
+### 1. Setup Environment
 ```bash
 git clone https://github.com/dhurka832/django-ecommerce-store.git
 cd django-ecommerce-store
@@ -40,36 +57,41 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### 3. Environment Variables
-Create a `.env` file in the root directory:
+### 3. Configure Environment Variables
+Create a `.env` file in the project root:
 ```env
 STRIPE_SECRET_KEY=sk_test_your_secret_key
 STRIPE_PUBLISHABLE_KEY=pk_test_your_publishable_key
 ```
 
-### 4. Migrate & Launch
+### 4. Run Migrations & Start Server
 ```bash
 python manage.py migrate
 python manage.py runserver
 ```
-Visit `http://localhost:8000` in your browser.
+Visit `http://localhost:8000`
 
 ---
 
-## 📁 Project Architecture
+## 🔑 Demo Account
+- **Username:** `Selva`
+- **Password:** `Selva@345`
+
+---
+
+## 📁 Project Structure
 
 ```text
 Ecommerce/
-├── ecommerce/          # Django project settings & root routing
-├── store/              # Main commerce application
-│   ├── static/store/   # Bespoke CSS, vanilla JS & chatbot engine
-│   ├── templates/store/# Custom HTML5 card-driven templates
-│   ├── models.py       # Product, Cart, Order, Wishlist schemas
-│   └── views.py        # Business logic & AI assistant API endpoint
-└── manage.py
+├── ecommerce/          # Django core settings & base URL routing
+├── store/              # Commerce app (models, views, routes)
+│   ├── static/store/   # Custom CSS stylesheets & JS scripts
+│   ├── templates/store/# Modular HTML5 templates
+│   ├── models.py       # Product, Category, Cart, Order, Wishlist
+│   └── views.py        # Application views & checkout logic
+├── media/              # Uploaded product media assets
+└── manage.py           # Django CLI management script
 ```
 
 ---
 
-## 📄 License
-MIT License © 2026 LUXE Studio.
